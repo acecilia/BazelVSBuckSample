@@ -3,7 +3,7 @@
 BUILDTOOL=buck
 
 setup_config:
-	rm -rf config && ln -s ${BUILDTOOL}_config config
+	rm -rf config/selected_config && ln -s ${BUILDTOOL}_config config/selected_config
 
 build: setup_config
 	# Build all targets recursively

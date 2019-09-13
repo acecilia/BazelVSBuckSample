@@ -3,8 +3,8 @@ genrule(
   name = "info_plist",
   visibility = ["PUBLIC"],
   srcs = [
-      "BuckSupportFiles/Info.plist",
+      "Info.plist",
   ],
   out = 'Info.plist',
-  cmd = 'cp $SRCDIR/BuckSupportFiles/Info.plist $OUT',
+  cmd = 'cp $SRCDIR/Info.plist $OUT',
 )
