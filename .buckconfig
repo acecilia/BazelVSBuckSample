@@ -1,3 +1,5 @@
+# Most of this file is taken from https://github.com/airbnb/BuckSample/blob/master/.buckconfig
+
 [cxx]
   default_platform = iphonesimulator-x86_64
   cflags = -g -fmodules -fobjc-arc -D BUCK -w $(config custom.other_cflags)
@@ -46,5 +48,5 @@
   code_coverage_swift_compiler_flags = -profile-generate -profile-coverage-mapping
 
 [buildfile]
-  name = BUILD
+  name = BUILD # In order to be able to switch between buck/bazel the build files have to be named the same
   
