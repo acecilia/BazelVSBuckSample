@@ -12,3 +12,6 @@ build: setup_config
 test: setup_config
 	# Test all targets recursively
 	$(BUILDTOOL) test //...
+
+clean: setup_config
+	$(BUILDTOOL) clean
