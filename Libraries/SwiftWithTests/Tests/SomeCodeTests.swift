@@ -1,7 +1,7 @@
 import XCTest
 import MainTarget
 
-final class MainTargetTests: XCTestCase {
+final class Tests: XCTestCase {
     func test() {
         XCTAssertEqual(text, "Hello, World!")
     }

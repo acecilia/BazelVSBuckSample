@@ -1,11 +1,14 @@
-.PHONY : build test
+.PHONY : install_buck build test
 
-BAZEL=bazel
+BUILDTOOL=buck
 
-build:
+setup_config:
+	rm -rf config && ln -s ${BUILDTOOL}_config config
+
+build: setup_config
 	# Build all targets recursively
-	$(BAZEL) build //...
+	$(BUILDTOOL) build //...
 
-test:
+test: setup_config
 	# Test all targets recursively
-	$(BAZEL) test //...
+	$(BUILDTOOL) test //...

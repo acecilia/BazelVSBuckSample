@@ -1,4 +1,4 @@
-load("//Config:custom_rules.bzl", "first_party_library")
+load("//config:custom_rules.bzl", "first_party_library")
 
 first_party_library(
     name = "MainTarget",

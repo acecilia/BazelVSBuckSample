@@ -10,3 +10,15 @@
 /bazel-*
 
 # End of https://www.gitignore.io/api/bazel
+
+# Created by https://www.gitignore.io/api/buck
+# Edit at https://www.gitignore.io/?templates=buck
+
+### Buck ###
+buck-out/
+.buckconfig.local
+.buckd/
+.buckversion
+.fakebuckversion
+
+# End of https://www.gitignore.io/api/buck
