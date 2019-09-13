@@ -3,7 +3,8 @@
 BAZEL=bazel
 
 build:
-	$(BAZEL) build //Libraries/SwiftWithTests:MainTarget
+	# Build all targets recursively
+	$(BAZEL) build //...
 
 test:
 	# Test all targets recursively
