@@ -1,0 +1,38 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'macOS 10.14'
+
+variables:
+  DEVELOPER_DIR: /Applications/Xcode_10.3.app
+
+steps:
+  # Boot simulator in advance in order to avoid error https://github.com/facebook/xctool/issues/766
+  # See: https://github.com/facebook/xctool/pull/767
+  - script: |
+      xcrun simctl boot "iPhone X"
+    displayName: Boot simulator
+  - script: |
+      brew tap bazelbuild/tap
+      brew install bazelbuild/tap/bazel
+      brew tap facebook/fb
+      brew install buck
+      brew install watchman
+    displayName: Install dependencies
+  # Run several operations on buck and bazel, so it is possible to compare how long they take to finish
+  # clean
+  - script: make clean BUILDTOOL=buck
+    displayName: clean buck
+  - script: make clean BUILDTOOL=bazel
+    displayName: clean bazel
+  # test with 100% miss cache
+  - script: make test BUILDTOOL=buck
+    displayName: test buck with 100% miss cache
+  - script: make test BUILDTOOL=bazel
+    displayName: test bazel with 100% miss cache
+  # test with 0% miss cache
+  - script: make test BUILDTOOL=buck
+    displayName: test buck with 0% miss cache
+  - script: make test BUILDTOOL=bazel
+    displayName: test bazel with 0% miss cache

@@ -20,7 +20,10 @@
   iphonesimulator_target_sdk_version = 11.0
   iphoneos_target_sdk_version = 11.0
   provisioning_profile_read_command = security cms -Di
-  xctool_default_destination_specifier = platform=iOS Simulator,OS=latest
+  # In order to avoid error https://github.com/facebook/xctool/issues/766, we need to boot the simulator in advance, before starting buck
+  # See: https://github.com/facebook/xctool/pull/767
+  # That is the reason why the following line specifies the simulator name: so it matches the one inside azure-pipelines.yml
+  xctool_default_destination_specifier = platform=iOS Simulator,name=iPhone X,OS=latest
   xctool_path = tools/xctool/bin/xctool
 
 [parser]
@@ -48,5 +51,6 @@
   code_coverage_swift_compiler_flags = -profile-generate -profile-coverage-mapping
 
 [buildfile]
-  name = BUILD # In order to be able to switch between buck/bazel the build files have to be named the same
+  # In order to be able to switch between buck/bazel the build files have to be named the same
+  name = BUILD
   

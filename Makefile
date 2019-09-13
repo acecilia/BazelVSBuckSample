@@ -1,17 +1,24 @@
 .PHONY : install_buck build test
 
-BUILDTOOL=buck
+# $${BUILDTOOL:?} is used in order to fail if variable is not set. See: https://stackoverflow.com/a/50642440
+
+# Do not print commands being executed
+MAKEFLAGS = --silent
+
+ifndef BUILDTOOL
+	export BUILDTOOL=bazel
+endif
 
 setup_config:
-	rm -rf config/selected_config && ln -s ${BUILDTOOL}_config config/selected_config
+	rm -rf config/selected_config && ln -s $${BUILDTOOL:?}_config config/selected_config
 
 build: setup_config
 	# Build all targets recursively
-	$(BUILDTOOL) build //...
+	$${BUILDTOOL:?} build //...
 
 test: setup_config
 	# Test all targets recursively
-	$(BUILDTOOL) test //...
+	$${BUILDTOOL:?} test //...
 
 clean: setup_config
-	$(BUILDTOOL) clean
+	$${BUILDTOOL:?} clean
