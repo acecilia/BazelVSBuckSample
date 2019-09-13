@@ -6,4 +6,5 @@ build:
 	$(BAZEL) build //Libraries/SwiftWithTests:MainTarget
 
 test:
-	$(BAZEL) test //Libraries/SwiftWithTests:MainTargetTests
+	# Test all targets recursively
+	$(BAZEL) test //...

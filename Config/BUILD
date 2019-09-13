@@ -1,0 +1,1 @@
+# An empty BUILD file is needed here in order for Bazel to access the .bzl files
