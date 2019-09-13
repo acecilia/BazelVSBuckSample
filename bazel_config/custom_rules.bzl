@@ -13,7 +13,6 @@ def first_party_library(
     name,
     deps = [],
     test_deps = [],
-    **kwargs
     ):
     srcs = native.glob(srcs_glob)
     swift_library(
@@ -21,7 +20,6 @@ def first_party_library(
         srcs = srcs,
         deps = deps,
         module_name = name,
-        **kwargs
     )
 
     test_name = generate_test_name(name)
