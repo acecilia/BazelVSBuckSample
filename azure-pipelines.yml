@@ -21,6 +21,11 @@ steps:
       brew install watchman
     displayName: Install dependencies
   # Run several operations on buck and bazel, so it is possible to compare how long they take to finish
+  # test after fresh installation
+  - script: make test BUILDTOOL=buck
+    displayName: test buck after fresh installation
+  - script: make test BUILDTOOL=bazel
+    displayName: test bazel after fresh installation
   # clean
   - script: make clean BUILDTOOL=buck
     displayName: clean buck
