@@ -1,0 +1,7 @@
+load("//config:custom_rules.bzl", "first_party_library")
+
+first_party_library(
+    name = "SwiftWithPrebuiltObjectiveCAndTestsTarget",
+    deps = ["//Carthage:AFNetworking"],
+    test_deps = ["//Carthage:AFNetworking"],
+)
