@@ -6,7 +6,7 @@
 MAKEFLAGS = --silent
 
 ifndef BUILDTOOL
-	export BUILDTOOL=buck
+	export BUILDTOOL=bazel
 endif
 
 setup_config:
