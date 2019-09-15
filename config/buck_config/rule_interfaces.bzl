@@ -1,4 +1,4 @@
-def swift_library_target(
+def swift_library_interface(
     name,
     srcs,
     deps,
@@ -10,7 +10,7 @@ def swift_library_target(
         module_name = name,
     )
 
-def swift_test_target(
+def swift_test_interface(
     name,
     srcs,
     deps,
@@ -31,4 +31,15 @@ def swift_test_target(
             "PRODUCT_BUNDLE_IDENTIFIER": "com.company." + name,
             "PRODUCT_NAME": name,
         },
+    )
+
+def prebuilt_apple_framework_interface(
+    name,
+    path,
+    ):
+    native.prebuilt_apple_framework(
+        name = name,
+        framework = path,
+        preferred_linkage = "shared",
+        visibility = ["PUBLIC"],
     )

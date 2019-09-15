@@ -1,0 +1,5 @@
+load("//config:custom_rules.bzl", "prebuilt_apple_framework")
+
+prebuilt_apple_framework(
+    path = "Build/iOS/AFNetworking.framework",
+)
