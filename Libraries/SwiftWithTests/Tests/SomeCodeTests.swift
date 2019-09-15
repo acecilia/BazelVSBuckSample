@@ -1,5 +1,5 @@
 import XCTest
-import MainTarget
+import SwiftWithTestsTarget
 
 final class Tests: XCTestCase {
     func test() {

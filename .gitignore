@@ -1,5 +1,5 @@
-# Created by https://www.gitignore.io/api/bazel
-# Edit at https://www.gitignore.io/?templates=bazel
+# Created by https://www.gitignore.io/api/buck,bazel,carthage
+# Edit at https://www.gitignore.io/?templates=buck,bazel,carthage
 
 ### Bazel ###
 # gitignore template for Bazel build system
@@ -9,11 +9,6 @@
 # based on the name of the directory bazel is cloned into.
 /bazel-*
 
-# End of https://www.gitignore.io/api/bazel
-
-# Created by https://www.gitignore.io/api/buck
-# Edit at https://www.gitignore.io/?templates=buck
-
 ### Buck ###
 buck-out/
 .buckconfig.local
@@ -21,4 +16,11 @@ buck-out/
 .buckversion
 .fakebuckversion
 
-# End of https://www.gitignore.io/api/buck
+### Carthage ###
+# Carthage
+#
+# Add this line if you want to avoid checking in source code from Carthage dependencies.
+Carthage/Checkouts
+Carthage/Build
+
+# End of https://www.gitignore.io/api/buck,bazel,carthage
