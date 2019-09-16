@@ -1,4 +1,5 @@
-load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library", "swift_test")
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_dynamic_framework_import")
 
 def swift_library_interface(
@@ -18,12 +19,18 @@ def swift_test_interface(
     srcs,
     deps,
     ):
-    swift_test(
-        name = name,
+    test_lib_name = name + "Lib"
+
+    swift_library(
+        name = test_lib_name,
         srcs = srcs,
         deps = deps,
-        module_name = name,
-        linkopts = ["-F../../../../../../../../../../Users/andres/Git/BazelSample/Carthage/Build/iOS"],
+    )
+
+    ios_unit_test(
+        name = name,
+        deps = [":" + test_lib_name],
+        minimum_os_version = "10.0",
     )
 
 def prebuilt_apple_framework_interface(
