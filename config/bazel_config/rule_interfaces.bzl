@@ -2,6 +2,8 @@ load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_dynamic_framework_import")
 
+build_system = "bazel"
+
 def swift_library_interface(
     name,
     srcs,

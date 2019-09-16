@@ -3,7 +3,13 @@
 
 # The rule_interfaces.bzl is the file that contains the concrete implementation 
 # of the rules for the different buildtools
-load("//config/selected_config:rule_interfaces.bzl", "swift_library_interface", "swift_test_interface", "prebuilt_apple_framework_interface")
+load(
+    "//config/selected_config:rule_interfaces.bzl", 
+    "build_system",
+    "swift_library_interface", 
+    "swift_test_interface", 
+    "prebuilt_apple_framework_interface",
+    )
 
 # Constants
 srcs_glob = ["Sources/**/*.swift"]
@@ -25,6 +31,11 @@ def first_party_library(
         srcs = srcs,
         deps = deps,
     )
+
+    # This is needed for buck
+    # See: https://github.com/airbnb/BuckSample/blob/24472210a105f7e3a5e71842ed79cae7bbc6e07e/Libraries/SwiftWithPrecompiledDependency/BUCK#L9
+    if build_system == "buck":
+        test_deps = test_deps + deps
 
     test_name = generate_test_name(name)
     test_srcs = native.glob(test_srcs_glob)

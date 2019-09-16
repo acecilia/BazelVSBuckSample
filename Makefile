@@ -18,7 +18,7 @@ build: setup_config
 
 test: setup_config
 	# Test all targets recursively
-	$${BUILDTOOL:?} test //...
+	$${BUILDTOOL:?} test //... # --test_output=all --cache_test_results=no # For debugging bazel
 
 clean: setup_config
 	$${BUILDTOOL:?} clean

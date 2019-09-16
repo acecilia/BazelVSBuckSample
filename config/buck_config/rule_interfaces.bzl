@@ -1,3 +1,5 @@
+build_system = "buck"
+
 def swift_library_interface(
     name,
     srcs,
