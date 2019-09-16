@@ -46,10 +46,10 @@ def first_party_library(
     )
 
 def prebuilt_apple_framework(
-    name,
     path,
     ):
+    basename_without_extension = path.replace('.', '/').split('/')[::-1][1]
     prebuilt_apple_framework_interface(
-        name = name,
+        name = basename_without_extension,
         path = path,
     )
