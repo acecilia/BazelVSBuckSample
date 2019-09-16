@@ -23,6 +23,7 @@ def swift_test_interface(
         srcs = srcs,
         deps = deps,
         module_name = name,
+        linkopts = ["-F../../../../../../../../../../Users/andres/Git/BazelSample/Carthage/Build/iOS"],
     )
 
 def prebuilt_apple_framework_interface(
