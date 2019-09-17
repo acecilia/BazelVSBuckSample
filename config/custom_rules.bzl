@@ -9,15 +9,23 @@ load(
     "swift_library_interface", 
     "swift_test_interface", 
     "prebuilt_apple_framework_interface",
+    "application_interface"
     )
 
 # Constants
 srcs_glob = ["Sources/**/*.swift"]
 test_srcs_glob = ["Tests/**/*.swift"]
+app_test_srcs_glob = ["AppTests/**/*.swift"]
 
 # Functions
-def generate_test_name(name): 
+def generate_tests_name(name): 
     return name + "Tests"
+
+def generate_app_name(name): 
+    return name + "Application"
+
+def generate_app_tests_name(name): 
+    return name + "AppTests"
 
 # Macros
 def first_party_library(
@@ -37,12 +45,10 @@ def first_party_library(
     if build_system == "buck":
         test_deps = test_deps + deps
 
-    test_name = generate_test_name(name)
-    test_srcs = native.glob(test_srcs_glob)
     swift_test_interface(
-        name = test_name,
+        name = generate_tests_name(name),
         deps = [":" + name] + test_deps,
-        srcs = test_srcs,
+        srcs = native.glob(test_srcs_glob),
     )
 
 def prebuilt_apple_framework(
@@ -52,4 +58,26 @@ def prebuilt_apple_framework(
     prebuilt_apple_framework_interface(
         name = basename_without_extension,
         path = path,
+    )
+
+def application(
+    name,
+    infoplist,
+    deps,
+    ):
+    first_party_library(
+        name = name,
+    )
+
+    swift_test_interface(
+        name = generate_app_tests_name(name),
+        deps = [":" + name],
+        srcs = native.glob(app_test_srcs_glob),
+        test_host = ":" + generate_app_name(name),
+    )
+
+    application_interface(
+        name = generate_app_name(name),
+        infoplist = infoplist,
+        deps = [":" + name] + deps,
     )
