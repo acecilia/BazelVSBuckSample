@@ -33,6 +33,7 @@ def swift_test_interface(
         name = name,
         deps = [":" + test_lib_name],
         minimum_os_version = "10.0",
+        runner = "//config/bazel_config:test_runner"
     )
 
 def prebuilt_apple_framework_interface(
