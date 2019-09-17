@@ -1,9 +1,14 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 
-http_archive(
+# http_archive(
+#     name = "build_bazel_rules_apple",
+#     sha256 = "a045a436b642c70fb0c10ca84ff0fd2dcbd59cc89100d597a61e8374afafb366",
+#     url = "https://github.com/bazelbuild/rules_apple/releases/download/0.18.0/rules_apple.0.18.0.tar.gz",
+# )
+
+local_repository(
     name = "build_bazel_rules_apple",
-    sha256 = "a045a436b642c70fb0c10ca84ff0fd2dcbd59cc89100d597a61e8374afafb366",
-    url = "https://github.com/bazelbuild/rules_apple/releases/download/0.18.0/rules_apple.0.18.0.tar.gz",
+    path = "./../rules_apple",
 )
 
 # TODO: Restore this back when support for Xcode 11 is added

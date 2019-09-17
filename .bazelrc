@@ -1,7 +1,7 @@
 build \
   --apple_platform_type=ios \
-  # --test_output=all \
-  # --cache_test_results=no \
+  --test_output=all \
+  --cache_test_results=no \
 
   # Simulator can not be selected with the default options
   # see: https://github.com/bazelbuild/rules_apple/pull/246#issuecomment-438757348

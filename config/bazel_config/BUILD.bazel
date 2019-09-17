@@ -5,6 +5,6 @@ load(
 
 ios_test_runner(
     name = "test_runner",
-    device_type = "iPhone X",
+    device_type = "D2B0934F-572F-4E2A-901C-E5EBC2352695",
     visibility = ["//visibility:public"],
 )
