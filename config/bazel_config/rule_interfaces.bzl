@@ -1,7 +1,7 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test", "ios_application")
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_dynamic_framework_import")
-load("//config:constants.bzl", "MINIMUM_OS_VERSION")
+load("//config:constants.bzl", "MINIMUM_OS_VERSION", "SWIFT_VERSION")
 
 build_system = "bazel"
 
@@ -15,13 +15,14 @@ def swift_library_interface(
         srcs = srcs,
         deps = deps,
         module_name = name,
+        copts = ["-swift-version", SWIFT_VERSION],
     )
 
 def swift_test_interface(
     name,
     srcs,
     deps,
-    test_host = None,
+    host_app = None,
     ):
     test_lib_name = name + "Lib"
 
@@ -29,17 +30,19 @@ def swift_test_interface(
         name = test_lib_name,
         srcs = srcs,
         deps = deps,
+        module_name = name,
+        copts = ["-swift-version", SWIFT_VERSION],
     )
 
     ios_unit_test(
         name = name,
         deps = [":" + test_lib_name],
-        minimum_os_version = "10.0",
+        minimum_os_version = MINIMUM_OS_VERSION,
         runner = "//config/bazel_config:test_runner",
-        test_host = test_host,
+        test_host = host_app,
     )
 
-def prebuilt_apple_framework_interface(
+def prebuilt_dynamic_framework_interface(
     name,
     path,
     ):
@@ -53,7 +56,8 @@ def prebuilt_apple_framework_interface(
 def application_interface(
     name,
     infoplist,
-    deps
+    main_target,
+    deps,
     ):
     ios_application(
         name = name,
@@ -61,5 +65,5 @@ def application_interface(
         families = ["iphone", "ipad",],
         infoplists = [infoplist],
         minimum_os_version = MINIMUM_OS_VERSION,
-        deps = deps,
+        deps = [main_target] + deps,
     )

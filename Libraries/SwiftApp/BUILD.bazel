@@ -2,6 +2,6 @@ load("//config:custom_rules.bzl", "application")
 
 application(
     name = "SwiftApp",
-    infoplist = ":Info.plist",
+    infoplist = "Info.plist",
     deps = [],
 )

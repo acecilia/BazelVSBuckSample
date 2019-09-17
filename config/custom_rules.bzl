@@ -8,7 +8,7 @@ load(
     "build_system",
     "swift_library_interface", 
     "swift_test_interface", 
-    "prebuilt_apple_framework_interface",
+    "prebuilt_dynamic_framework_interface",
     "application_interface"
     )
 
@@ -22,10 +22,10 @@ def generate_tests_name(name):
     return name + "Tests"
 
 def generate_app_name(name): 
-    return name + "Application"
+    return name + "Bundle"
 
 def generate_app_tests_name(name): 
-    return name + "AppTests"
+    return name + "TestsWithHostApp"
 
 # Macros
 def first_party_library(
@@ -51,11 +51,11 @@ def first_party_library(
         srcs = native.glob(test_srcs_glob),
     )
 
-def prebuilt_apple_framework(
+def prebuilt_dynamic_framework(
     path,
     ):
     basename_without_extension = path.replace('.', '/').split('/')[::-1][1]
-    prebuilt_apple_framework_interface(
+    prebuilt_dynamic_framework_interface(
         name = basename_without_extension,
         path = path,
     )
@@ -65,19 +65,23 @@ def application(
     infoplist,
     deps,
     ):
+    # Library with the code of the app, plus an associated unit test target without host app
     first_party_library(
         name = name,
     )
 
+    # Test library with a host app, so tests that require an app running can be executed
     swift_test_interface(
         name = generate_app_tests_name(name),
         deps = [":" + name],
         srcs = native.glob(app_test_srcs_glob),
-        test_host = ":" + generate_app_name(name),
+        host_app = ":" + generate_app_name(name),
     )
 
+    # The application bundle
     application_interface(
         name = generate_app_name(name),
         infoplist = infoplist,
-        deps = [":" + name] + deps,
+        main_target = ":" + name,
+        deps = deps,
     )

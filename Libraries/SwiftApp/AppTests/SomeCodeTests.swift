@@ -3,7 +3,11 @@ import XCTest
 
 final class Tests: XCTestCase {
     func test() {
-        let text = (UIApplication.shared.delegate as? AppDelegate)?.text
-        XCTAssertEqual(text, "This is the app delegate!")
+        XCTAssertEqual(text, "This is a public property in the app code!")
+    }
+
+    func testHostAppExists() {
+        let delegateText = (UIApplication.shared.delegate as? AppDelegate)?.text
+        XCTAssertEqual(delegateText, "This is an internal property in the app delegate!")
     }
 }

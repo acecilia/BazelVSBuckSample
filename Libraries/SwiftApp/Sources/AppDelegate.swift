@@ -5,7 +5,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
   var window: UIWindow?
 
-  let text = "This is the app delegate!"
+  let text = "This is an internal property in the app delegate!"
 
   func application(
     _ application: UIApplication,
@@ -21,5 +21,5 @@ class AppDelegate: NSObject, UIApplicationDelegate {
   }
 }
 
-public let text = "This is the app code!"
+public let text = "This is a public property in the app code!"
 
