@@ -1,6 +1,15 @@
-load("//config:constants.bzl", "SWIFT_VERSION")
+load("//config:constants.bzl", "SWIFT_VERSION", "PRODUCT_BUNDLE_IDENTIFIER_PREFIX")
 
 build_system = "buck"
+
+# This is needed for buck
+# See: 
+# - https://github.com/facebook/buck/issues/2058
+# - https://github.com/airbnb/BuckSample/blob/24472210a105f7e3a5e71842ed79cae7bbc6e07e/Libraries/SwiftWithPrecompiledDependency/BUCK#L9
+prebuilt_dependencies_hack = [
+    "//Carthage:AFNetworking",
+    "//Carthage:FileKit",
+]
 
 def swift_library_interface(
     name,
@@ -13,14 +22,17 @@ def swift_library_interface(
         deps = deps,
         module_name = name,
         swift_version = SWIFT_VERSION,
+        visibility = ["PUBLIC"],
     )
 
 def swift_test_interface(
     name,
     srcs,
     deps,
-    host_app = None,
+    host_app,
     ):
+    deps = deps + prebuilt_dependencies_hack
+
     native.apple_test(
         name = name,
         srcs = srcs,
@@ -34,7 +46,7 @@ def swift_test_interface(
             "CURRENT_PROJECT_VERSION": "1",
             "DEVELOPMENT_LANGUAGE": "English",
             "EXECUTABLE_NAME": name,
-            "PRODUCT_BUNDLE_IDENTIFIER": "com.company." + name,
+            "PRODUCT_BUNDLE_IDENTIFIER": PRODUCT_BUNDLE_IDENTIFIER_PREFIX + name,
             "PRODUCT_NAME": name,
         },
         test_host_app = host_app,
@@ -65,6 +77,8 @@ def application_interface(
         deps = [main_target],
     )
 
+    deps = deps + prebuilt_dependencies_hack
+
     native.apple_bundle(
         name = name,
         extension = "app",
@@ -72,8 +86,13 @@ def application_interface(
         info_plist = infoplist,
         info_plist_substitutions = {
             "EXECUTABLE_NAME": name,
-            "PRODUCT_BUNDLE_IDENTIFIER": "com.example." + name,
+            "PRODUCT_BUNDLE_IDENTIFIER": PRODUCT_BUNDLE_IDENTIFIER_PREFIX + name,
             "PRODUCT_NAME": name,
         },
         deps = deps,
+    )
+
+    native.apple_package(
+        name = name + "Package",
+        bundle = ":" + name,
     )

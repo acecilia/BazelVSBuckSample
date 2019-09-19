@@ -1,4 +1,7 @@
 import UIKit
+import SwiftModule
+import SwiftModuleWithPrebuiltDependency
+
 
 @UIApplicationMain
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -21,5 +24,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
   }
 }
 
-public let text = "This is a public property in the app code!"
+let text = "This is an internal property in the app code!"
+let swiftModuleText = SwiftModule.text
+let swiftModuleWithPrebuiltDependencyText1 = SwiftModuleWithPrebuiltDependency.text1
+let swiftModuleWithPrebuiltDependencyText2 = SwiftModuleWithPrebuiltDependency.text2
 

@@ -3,5 +3,8 @@ load("//config:custom_rules.bzl", "application")
 application(
     name = "SwiftApp",
     infoplist = "Info.plist",
-    deps = [],
+    deps = [
+        "//Libraries/SwiftModule:SwiftModule",
+        "//Libraries/SwiftModuleWithPrebuiltDependency:SwiftModuleWithPrebuiltDependency",
+    ],
 )

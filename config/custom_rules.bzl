@@ -40,15 +40,11 @@ def first_party_library(
         deps = deps,
     )
 
-    # This is needed for buck
-    # See: https://github.com/airbnb/BuckSample/blob/24472210a105f7e3a5e71842ed79cae7bbc6e07e/Libraries/SwiftWithPrecompiledDependency/BUCK#L9
-    if build_system == "buck":
-        test_deps = test_deps + deps
-
     swift_test_interface(
         name = generate_tests_name(name),
         deps = [":" + name] + test_deps,
         srcs = native.glob(test_srcs_glob),
+        host_app = None,
     )
 
 def prebuilt_dynamic_framework(
@@ -63,17 +59,21 @@ def prebuilt_dynamic_framework(
 def application(
     name,
     infoplist,
-    deps,
+    deps = [],
+    test_deps = [],
+    app_test_deps = [],
     ):
     # Library with the code of the app, plus an associated unit test target without host app
     first_party_library(
         name = name,
+        deps = deps,
+        test_deps = test_deps,
     )
 
     # Test library with a host app, so tests that require an app running can be executed
     swift_test_interface(
         name = generate_app_tests_name(name),
-        deps = [":" + name],
+        deps = [":" + name] + app_test_deps,
         srcs = native.glob(app_test_srcs_glob),
         host_app = ":" + generate_app_name(name),
     )
