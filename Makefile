@@ -34,6 +34,14 @@ else
 	$(BUILDTOOL) run //Libraries/SwiftApp:SwiftAppBundle
 endif
 
+project: setup_config clean
+ifeq ($(BUILDTOOL),buck)
+	$(BUILDTOOL) project //config/buck_config:workspace
+	open config/buck_config/workspace.xcworkspace
+else
+	~/Applications/Tulsi.app/Contents/MacOS/Tulsi -- --bazel /usr/local/bin/bazel --genconfig "config/bazel_config/SwiftApp.tulsiproj:all"
+endif	
+
 export_ipa: setup_config
 # Export the app into an ipa
 	mkdir -p "$(ipa_output_path)"
@@ -56,7 +64,12 @@ else
 endif
 
 clean: setup_config
+	find . \( -name '*.xcworkspace' -o -name '*.xcodeproj' -o -name '*.d' -o -name '*.dia' -o -name '*.o' \) -exec rm -rf {} +
+ifeq ($(BUILDTOOL),buck)
+	rm -rf buck-out
+else
 	$(BUILDTOOL) clean
+endif
 
 # Actions for all build tools
 

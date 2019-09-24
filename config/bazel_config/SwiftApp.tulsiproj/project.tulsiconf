@@ -1,0 +1,22 @@
+{
+  "configDefaults" : {
+    "optionSet" : {
+      "BazelBuildStartupOptionsDebug" : {
+        "p" : "--bazelrc=.bazelrc"
+      },
+      "BazelBuildStartupOptionsRelease" : {
+        "p" : "--bazelrc=.bazelrc"
+      },
+      "ProjectGenerationBazelStartupOptions" : {
+        "p" : "--bazelrc=.bazelrc"
+      }
+    }
+  },
+  "packages" : [
+    "Libraries/SwiftApp",
+    "Libraries/SwiftModule",
+    "Libraries/SwiftModuleWithPrebuiltDependency"
+  ],
+  "projectName" : "SwiftApp",
+  "workspaceRoot" : "../../.."
+}
