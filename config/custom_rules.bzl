@@ -6,6 +6,8 @@
 load(
     "//config/selected_config:rule_interfaces.bzl", 
     "build_system",
+    "objc_library_interface",
+    "objc_test_interface",
     "swift_library_interface", 
     "swift_test_interface", 
     "prebuilt_dynamic_framework_interface",
@@ -14,35 +16,42 @@ load(
 
 # Constants
 main_code_path = "Sources"
-test_code_path = "Tests"
-app_test_code_path = "AppTests"
+swift_test_code_path = "Tests"
+objc_test_code_path = "ObjcTests"
+swift_app_test_code_path = "AppTests"
+objc_app_test_code_path = "ObjcAppTests"
 
 # swift
-swift_files_glob = "/**/*.swift"
-swift_srcs_glob = [main_code_path + swift_files_glob]
-swift_test_srcs_glob = [test_code_path + swift_files_glob]
-swift_app_test_srcs_glob = [app_test_code_path + swift_files_glob]
+swift_files_suffix = "/**/*.swift"
+swift_srcs_glob = [main_code_path + swift_files_suffix]
+swift_test_srcs_glob = [swift_test_code_path + swift_files_suffix]
+swift_app_test_srcs_glob = [swift_app_test_code_path + swift_files_suffix]
 
-#objective-c
-objc_files_glob = "/**/*.m"
-objc_header_files_glob = "/**/*.h"
-objc_srcs_glob = [main_code_path + objc_files_glob]
-objc_test_srcs_glob = [test_code_path + objc_files_glob]
-objc_app_test_srcs_glob = [app_test_code_path + objc_files_glob]
+# objective-c
+objc_files_suffix = "/**/*.m"
+objc_srcs_glob = [main_code_path + objc_files_suffix]
+objc_test_srcs_glob = [objc_test_code_path + objc_files_suffix]
+objc_app_test_srcs_glob = [objc_app_test_code_path + objc_files_suffix]
+
+# objective-c headers
+objc_headers_suffix = "/**/*.h"
+objc_headers_glob = [main_code_path + objc_headers_suffix]
 
 # Functions
-def generate_glob(name): 
-    return native.glob(swift_srcs_glob)
+def generate_swift_tests_name(name): 
+    return name + swift_test_code_path
 
-def generate_tests_name(name): 
-    return name + "Tests"
+def generate_swift_app_tests_name(name): 
+    return name + swift_app_test_code_path
 
-def generate_app_tests_name(name): 
-    return name + "AppTests"
+def generate_objc_tests_name(name): 
+    return name + objc_test_code_path
+
+def generate_objc_app_tests_name(name): 
+    return name + objc_app_test_code_path
 
 def generate_app_name(name): 
     return name + "Bundle"
-
 
 # Macros
 def first_party_library(
@@ -50,6 +59,7 @@ def first_party_library(
     deps = [],
     test_deps = [],
     ):
+    # The main target has to be swift or objc, not both
     swift_srcs = native.glob(swift_srcs_glob)
     if len(swift_srcs) > 0:
         swift_library_interface(
@@ -58,13 +68,31 @@ def first_party_library(
             deps = deps,
         )
 
-    test_srcs = native.glob(swift_test_srcs_glob)
-    if len(test_srcs) > 0:
+    objc_srcs = native.glob(objc_srcs_glob)
+    if len(objc_srcs) > 0:
+        objc_library_interface(
+            name = name,
+            srcs = objc_srcs,
+            headers = native.glob(objc_headers_glob),
+            deps = deps,
+        )
+
+    # The test targets can be swift, objc or both
+    cucu = [":" + name] + test_deps
+    swift_test_srcs = native.glob(swift_test_srcs_glob)
+    if len(swift_test_srcs) > 0:
         swift_test_interface(
-            name = generate_tests_name(name),
-            deps = [":" + name] + test_deps,
-            srcs = test_srcs,
-            host_app = None,
+            name = generate_swift_tests_name(name),
+            deps = cucu,
+            srcs = swift_test_srcs,
+        )
+
+    objc_test_srcs = native.glob(objc_test_srcs_glob)
+    if len(objc_test_srcs) > 0:
+        objc_test_interface(
+            name = generate_objc_tests_name(name),
+            deps = cucu,
+            srcs = objc_test_srcs,
         )
 
 def prebuilt_dynamic_framework(
@@ -94,7 +122,7 @@ def application(
     if len(swift_app_test_srcs) > 0:
         # Test library with a host app, so tests that require an app running can be executed
         swift_test_interface(
-            name = generate_app_tests_name(name),
+            name = generate_swift_app_tests_name(name),
             deps = [":" + name] + app_test_deps,
             srcs = swift_app_test_srcs,
             host_app = ":" + generate_app_name(name),

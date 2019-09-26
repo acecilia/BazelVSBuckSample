@@ -11,25 +11,57 @@ prebuilt_dependencies_hack = [
     "//Carthage:FileKit",
 ]
 
+# A common interface for a swift of objc library
+def apple_library_interface(
+    name,
+    srcs,
+    headers,
+    deps,
+    swift_version,
+    ):
+    native.apple_library(
+        name = name,
+        srcs = srcs,
+        exported_headers = headers,
+        modular = True,
+        deps = deps,
+        swift_version = swift_version,
+        visibility = ["PUBLIC"],
+    )
+
+def objc_library_interface(
+    name,
+    srcs,
+    headers,
+    deps,
+    ):
+    apple_library_interface(
+        name = name,
+        srcs = srcs,
+        headers = headers,
+        deps = deps,
+        swift_version = None,
+    )
+
 def swift_library_interface(
     name,
     srcs,
     deps,
     ):
-    native.apple_library(
+    apple_library_interface(
         name = name,
         srcs = srcs,
+        headers = None,
         deps = deps,
-        module_name = name,
         swift_version = SWIFT_VERSION,
-        visibility = ["PUBLIC"],
     )
 
-def swift_test_interface(
+def apple_test_interface(
     name,
     srcs,
     deps,
     host_app,
+    swift_version,
     ):
     deps = deps + prebuilt_dependencies_hack
 
@@ -50,6 +82,34 @@ def swift_test_interface(
             "PRODUCT_NAME": name,
         },
         test_host_app = host_app,
+        swift_version = swift_version,
+    )
+
+def objc_test_interface(
+    name,
+    srcs,
+    deps,
+    host_app = None,
+    ):
+    apple_test_interface(
+        name = name,
+        srcs = srcs,
+        deps = deps,
+        host_app = host_app,
+        swift_version = None,
+    )
+
+def swift_test_interface(
+    name,
+    srcs,
+    deps,
+    host_app = None,
+    ):
+    apple_test_interface(
+        name = name,
+        srcs = srcs,
+        deps = deps,
+        host_app = host_app,
         swift_version = SWIFT_VERSION,
     )
 

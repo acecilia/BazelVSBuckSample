@@ -68,11 +68,7 @@ endif
 
 clean: setup_config
 	find . \( -name '*.xcworkspace' -o -name '*.xcodeproj' -o -name '*.d' -o -name '*.dia' -o -name '*.o' \) -exec rm -rf {} +
-ifeq ($(BUILDTOOL),buck)
-	rm -rf buck-out
-else
 	$(BUILDTOOL) clean
-endif
 
 # Actions for all build tools
 
