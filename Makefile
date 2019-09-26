@@ -18,6 +18,9 @@ setup_config:
 # Setup the configuration depending on the build tool
 	rm -rf config/selected_config && ln -s $(BUILDTOOL)_config config/selected_config
 
+install_tools:
+	sh scripts/install_tools.sh
+
 build: setup_config
 # Build all targets recursively
 	$(BUILDTOOL) build //Libraries/...

@@ -14,11 +14,7 @@ steps:
       xcrun simctl boot "iPhone X"
     displayName: Boot simulator
   - script: |
-      brew tap bazelbuild/tap
-      brew install bazelbuild/tap/bazel
-      brew tap facebook/fb
-      brew install buck
-      brew install watchman
+      make install_tools
     displayName: Install tools
   - script: |
       carthage bootstrap --platform ios
