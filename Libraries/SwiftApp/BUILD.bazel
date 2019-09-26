@@ -4,6 +4,7 @@ application(
     name = "SwiftApp",
     infoplist = "Info.plist",
     deps = [
+        "//Libraries/SwiftModuleWithoutTests:SwiftModuleWithoutTests",
         "//Libraries/SwiftModule:SwiftModule",
         "//Libraries/SwiftModuleWithPrebuiltDependency:SwiftModuleWithPrebuiltDependency",
     ],

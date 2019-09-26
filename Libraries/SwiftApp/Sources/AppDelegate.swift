@@ -1,5 +1,6 @@
 import UIKit
 import SwiftModule
+import SwiftModuleWithoutTests
 import SwiftModuleWithPrebuiltDependency
 
 
@@ -26,6 +27,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 let text = "This is an internal property in the app code!"
 let swiftModuleText = SwiftModule.text
+let swiftModuleWithoutTestsText = SwiftModuleWithoutTests.text
 let swiftModuleWithPrebuiltDependencyText1 = SwiftModuleWithPrebuiltDependency.text1
 let swiftModuleWithPrebuiltDependencyText2 = SwiftModuleWithPrebuiltDependency.text2
 
