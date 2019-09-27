@@ -78,12 +78,12 @@ def first_party_library(
         )
 
     # The test targets can be swift, objc or both
-    cucu = [":" + name] + test_deps
+    test_deps = [":" + name] + test_deps
     swift_test_srcs = native.glob(swift_test_srcs_glob)
     if len(swift_test_srcs) > 0:
         swift_test_interface(
             name = generate_swift_tests_name(name),
-            deps = cucu,
+            deps = test_deps,
             srcs = swift_test_srcs,
         )
 
@@ -91,7 +91,7 @@ def first_party_library(
     if len(objc_test_srcs) > 0:
         objc_test_interface(
             name = generate_objc_tests_name(name),
-            deps = cucu,
+            deps = test_deps,
             srcs = objc_test_srcs,
         )
 
