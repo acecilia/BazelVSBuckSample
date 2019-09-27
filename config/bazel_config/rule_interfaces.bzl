@@ -43,7 +43,7 @@ def objc_test_interface(
     ):
     return
     # For now having objc tests of objc libraries seems not possible. 
-    #See: https://github.com/bazelbuild/bazel/pull/5905#issuecomment-535735561
+    # See: https://github.com/bazelbuild/bazel/pull/5905#issuecomment-535735561
 
     test_lib_name = name + "Lib"
 
@@ -51,6 +51,7 @@ def objc_test_interface(
         name = test_lib_name,
         srcs = srcs,
         deps = deps,
+        # includes = ["Sources"],
         module_name = test_lib_name,
     )
 
