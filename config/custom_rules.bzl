@@ -21,23 +21,23 @@ objc_test_code_path = "ObjcTests"
 swift_app_test_code_path = "AppTests"
 objc_app_test_code_path = "ObjcAppTests"
 
-# swift
+# swift source files
 swift_files_suffix = "/**/*.swift"
 def swift_srcs(): return native.glob([main_code_path + swift_files_suffix])
 def swift_test_srcs(): return native.glob([swift_test_code_path + swift_files_suffix])
 def swift_app_test_srcs(): return native.glob([swift_app_test_code_path + swift_files_suffix])
 
-# objective-c
+# objective-c source files
 objc_files_suffix = "/**/*.m"
 def objc_srcs(): return native.glob([main_code_path + objc_files_suffix])
 def objc_test_srcs(): return native.glob([objc_test_code_path + objc_files_suffix])
 def objc_app_test_srcs(): return native.glob([objc_app_test_code_path + objc_files_suffix])
 
-# objective-c headers
+# objective-c headers files
 objc_headers_suffix = "/**/*.h"
 def objc_headers(): return native.glob([main_code_path + objc_headers_suffix])
 
-# Functions
+# Target names
 def swift_tests_name(name): return name + swift_test_code_path
 def swift_app_tests_name(name): return name + swift_app_test_code_path
 def objc_tests_name(name): return name + objc_test_code_path
