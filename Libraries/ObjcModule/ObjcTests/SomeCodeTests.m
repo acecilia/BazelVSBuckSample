@@ -4,7 +4,7 @@
 @interface ObjcModuleTests: XCTestCase
 @end
 
-@implementation ObjcModuleTests
+@implementation Tests
 - (void)test {
   XCTAssertEqual(text, @"Hello, World!");
 }
