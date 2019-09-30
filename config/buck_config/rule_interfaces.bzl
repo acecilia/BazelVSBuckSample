@@ -11,14 +11,28 @@ prebuilt_dependencies_hack = [
     "//Carthage:FileKit",
 ]
 
+def resources_group_interface(
+    name,
+    files,
+    ):
+    native.apple_resource(
+        name = name,
+        files = files,
+    )
+
 # A common interface for a swift of objc library
 def apple_library_interface(
     name,
     srcs,
     headers,
     deps,
+    resources_rule,
     swift_version,
     ):
+    # In buck, resources are used as dependencies. See: https://buck.build/rule/apple_resource.html
+    if resources_rule != None:
+        deps = deps + [":" + resources_rule]
+
     native.apple_library(
         name = name,
         srcs = srcs,
@@ -34,12 +48,14 @@ def objc_library_interface(
     srcs,
     headers,
     deps,
+    resources_rule,
     ):
     apple_library_interface(
         name = name,
         srcs = srcs,
         headers = headers,
         deps = deps,
+        resources_rule = resources_rule,
         swift_version = None,
     )
 
@@ -47,12 +63,14 @@ def swift_library_interface(
     name,
     srcs,
     deps,
+    resources_rule,
     ):
     apple_library_interface(
         name = name,
         srcs = srcs,
         headers = None,
         deps = deps,
+        resources_rule = resources_rule,
         swift_version = SWIFT_VERSION,
     )
 
@@ -150,6 +168,7 @@ def application_interface(
             "PRODUCT_NAME": name,
         },
         deps = deps,
+        visibility = ["PUBLIC"],
     )
 
     native.apple_package(

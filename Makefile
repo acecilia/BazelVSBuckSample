@@ -85,3 +85,7 @@ all_extract_ipa: all_export_ipa
 all_clean:
 	$(MAKE) clean BUILDTOOL=buck
 	$(MAKE) clean BUILDTOOL=bazel
+
+all_test:
+	$(MAKE) test BUILDTOOL=buck
+	$(MAKE) test BUILDTOOL=bazel

@@ -6,6 +6,7 @@
 load(
     "//config/selected_config:rule_interfaces.bzl", 
     "build_system",
+    "resources_group_interface",
     "objc_library_interface",
     "objc_test_interface",
     "swift_library_interface", 
@@ -15,33 +16,37 @@ load(
     )
 
 # Constants
-main_code_path = "Sources"
-swift_test_code_path = "Tests"
-objc_test_code_path = "ObjcTests"
-swift_app_test_code_path = "AppTests"
-objc_app_test_code_path = "ObjcAppTests"
+sources_path = "Sources"
+tests_path = "Tests"
+app_tests_path = "AppTests"
+resources_path = "Resources"
 
-# swift source files
+# Swift source files
 swift_files_suffix = "/**/*.swift"
-def swift_srcs(): return native.glob([main_code_path + swift_files_suffix])
-def swift_test_srcs(): return native.glob([swift_test_code_path + swift_files_suffix])
-def swift_app_test_srcs(): return native.glob([swift_app_test_code_path + swift_files_suffix])
+def swift_srcs(): return native.glob([sources_path + swift_files_suffix])
+def swift_test_srcs(): return native.glob([tests_path + swift_files_suffix])
+def swift_app_test_srcs(): return native.glob([app_tests_path + swift_files_suffix])
 
-# objective-c source files
+# Objective-c source files
 objc_files_suffix = "/**/*.m"
-def objc_srcs(): return native.glob([main_code_path + objc_files_suffix])
-def objc_test_srcs(): return native.glob([objc_test_code_path + objc_files_suffix])
-def objc_app_test_srcs(): return native.glob([objc_app_test_code_path + objc_files_suffix])
+def objc_srcs(): return native.glob([sources_path + objc_files_suffix])
+def objc_test_srcs(): return native.glob([tests_path + objc_files_suffix])
+def objc_app_test_srcs(): return native.glob([app_tests_path + objc_files_suffix])
 
-# objective-c headers files
+# Objective-c headers files
 objc_headers_suffix = "/**/*.h"
-def objc_headers(): return native.glob([main_code_path + objc_headers_suffix])
+def objc_headers(): return native.glob([sources_path + objc_headers_suffix])
+
+# Resources
+resources_suffix = "/**/*"
+def resource_files(): return native.glob([resources_path + resources_suffix])
 
 # Target names
-def swift_tests_name(name): return name + swift_test_code_path
-def swift_app_tests_name(name): return name + swift_app_test_code_path
-def objc_tests_name(name): return name + objc_test_code_path
-def objc_app_tests_name(name): return name + objc_app_test_code_path
+def resources_name(name): return name + resources_path
+def swift_tests_name(name): return name + tests_path
+def swift_app_tests_name(name): return name + app_tests_path
+def objc_tests_name(name): return name + "Objc" + tests_path
+def objc_app_tests_name(name): return name + "Objc" + app_tests_path
 def app_name(name): return name + "Bundle"
 
 # Macros
@@ -50,14 +55,23 @@ def first_party_library(
     deps = [],
     test_deps = [],
     app_test_deps = [],
-    host_app = app_name("//Libraries/HostApp/HostApp")
+    host_app = app_name("//Libraries/HostApp:HostApp")
     ):
+    resources_rule = None
+    if len(resource_files()) > 0:
+        resources_group_interface(
+            name = resources_name(name),
+            files = resource_files(),
+        )
+        resources_rule = resources_name(name)
+
     # The main target has to be swift or objc, not both
     if len(swift_srcs()) > 0:
         swift_library_interface(
             name = name,
             srcs = swift_srcs(),
             deps = deps,
+            resources_rule = resources_rule,
         )
 
     if len(objc_srcs()) > 0:
@@ -66,10 +80,10 @@ def first_party_library(
             srcs = objc_srcs(),
             headers = objc_headers(),
             deps = deps,
+            resources_rule = resources_rule,
         )
 
-    # The test targets can be swift, objc or both. 
-    # They have to be in separated targets
+    # The test targets can be swift, objc or both
     test_deps = [":" + name] + test_deps
     if len(swift_test_srcs()) > 0:
         swift_test_interface(
@@ -85,8 +99,7 @@ def first_party_library(
             srcs = objc_test_srcs(),
         )
 
-    # The app test targets can be swift, objc or both. 
-    # They have to be in separated targets
+    # The app test targets can be swift, objc or both
     app_test_deps = [":" + name] + app_test_deps
     if len(swift_app_test_srcs()) > 0:
         swift_test_interface(

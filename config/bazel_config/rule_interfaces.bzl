@@ -2,21 +2,39 @@ load("@rules_cc//cc:defs.bzl", "objc_library")
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test", "ios_application")
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_dynamic_framework_import")
+load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_group")
 load("//config:constants.bzl", "MINIMUM_OS_VERSION", "SWIFT_VERSION", "PRODUCT_BUNDLE_IDENTIFIER_PREFIX")
 
 build_system = "bazel"
+
+def resources_group_interface(
+    name,
+    files,
+    ):
+    apple_resource_group(
+        name = name,
+        resources = files,
+    )
+
+def get_data_from(resources_rule): 
+    if resources_rule != None:
+        return [":" + resources_rule]
+    else:
+        return []
 
 def objc_library_interface(
     name,
     srcs,
     headers,
     deps,
+    resources_rule,
     ):
     objc_library(
         name = name,
         srcs = srcs,
         hdrs = headers,
         deps = deps,
+        data = get_data_from(resources_rule),
         module_name = name,
         visibility = ["//visibility:public"],
     )
@@ -25,11 +43,13 @@ def swift_library_interface(
     name,
     srcs,
     deps,
+    resources_rule,
     ):
     swift_library(
         name = name,
         srcs = srcs,
         deps = deps,
+        data = get_data_from(resources_rule),
         module_name = name,
         copts = ["-swift-version", SWIFT_VERSION],
         visibility = ["//visibility:public"],
@@ -111,4 +131,5 @@ def application_interface(
         infoplists = [infoplist],
         minimum_os_version = MINIMUM_OS_VERSION,
         deps = [main_target] + deps,
+        visibility = ["//visibility:public"],
     )
