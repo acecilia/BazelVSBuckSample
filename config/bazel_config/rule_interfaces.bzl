@@ -7,6 +7,14 @@ load("//config:constants.bzl", "MINIMUM_OS_VERSION", "SWIFT_VERSION", "PRODUCT_B
 
 build_system = "bazel"
 
+def exports_files_interface(
+    files,
+    ):
+    native.exports_files(
+        srcs = files,
+        visibility = ["//visibility:public"],
+    )
+
 def resources_group_interface(
     name,
     files,
@@ -27,7 +35,7 @@ def objc_library_interface(
     srcs,
     headers,
     deps,
-    resources_rule,
+    resources_rule = None,
     ):
     objc_library(
         name = name,
@@ -43,7 +51,7 @@ def swift_library_interface(
     name,
     srcs,
     deps,
-    resources_rule,
+    resources_rule = None,
     ):
     swift_library(
         name = name,
@@ -122,14 +130,19 @@ def application_interface(
     name,
     infoplist,
     main_target,
-    deps,
+    strip_unused_symbols = True,
     ):
+    linkopts = []
+    if strip_unused_symbols == False:
+        linkopts = ["-all_load"]
+
     ios_application(
         name = name,
         bundle_id = PRODUCT_BUNDLE_IDENTIFIER_PREFIX + name,
         families = ["iphone", "ipad",],
         infoplists = [infoplist],
         minimum_os_version = MINIMUM_OS_VERSION,
-        deps = [main_target] + deps,
+        deps = [main_target],
+        linkopts = linkopts,
         visibility = ["//visibility:public"],
     )

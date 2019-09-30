@@ -2,7 +2,7 @@ load("//config:constants.bzl", "SWIFT_VERSION", "PRODUCT_BUNDLE_IDENTIFIER_PREFI
 
 build_system = "buck"
 
-# This is needed for buck
+# The prebuilt dependencies in buck have to be passed as dependencies of the apple_bundle rule
 # See: 
 # - https://github.com/facebook/buck/issues/2058
 # - https://github.com/airbnb/BuckSample/blob/24472210a105f7e3a5e71842ed79cae7bbc6e07e/Libraries/SwiftWithPrecompiledDependency/BUCK#L9
@@ -10,6 +10,19 @@ prebuilt_dependencies_hack = [
     "//Carthage:AFNetworking",
     "//Carthage:FileKit",
 ]
+
+def exports_files_interface(
+    files,
+    ):
+    for file in files:
+        basename = file.split('/')[::-1][0]
+        native.genrule(
+            name = file,
+            srcs = [file],
+            out = basename,
+            cmd = "cp $SRCDIR/" + file + " $OUT",
+            visibility = ["PUBLIC"],
+        )
 
 def resources_group_interface(
     name,
@@ -48,7 +61,7 @@ def objc_library_interface(
     srcs,
     headers,
     deps,
-    resources_rule,
+    resources_rule = None,
     ):
     apple_library_interface(
         name = name,
@@ -63,7 +76,7 @@ def swift_library_interface(
     name,
     srcs,
     deps,
-    resources_rule,
+    resources_rule = None,
     ):
     apple_library_interface(
         name = name,
@@ -146,16 +159,19 @@ def application_interface(
     name,
     infoplist,
     main_target,
-    deps,
+    strip_unused_symbols = True,
     ):
+    linker_flags = None
+    if strip_unused_symbols == False:
+        linker_flags = ["-all_load"]
+
     binary_name = name + "Binary"
     native.apple_binary(
         name = binary_name,
         srcs = [],
         deps = [main_target],
+        linker_flags = linker_flags,
     )
-
-    deps = deps + prebuilt_dependencies_hack
 
     native.apple_bundle(
         name = name,
@@ -167,7 +183,7 @@ def application_interface(
             "PRODUCT_BUNDLE_IDENTIFIER": PRODUCT_BUNDLE_IDENTIFIER_PREFIX + name,
             "PRODUCT_NAME": name,
         },
-        deps = deps,
+        deps = prebuilt_dependencies_hack,
         visibility = ["PUBLIC"],
     )
 

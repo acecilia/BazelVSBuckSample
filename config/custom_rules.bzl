@@ -6,6 +6,7 @@
 load(
     "//config/selected_config:rule_interfaces.bzl", 
     "build_system",
+    "exports_files_interface",
     "resources_group_interface",
     "objc_library_interface",
     "objc_test_interface",
@@ -20,6 +21,8 @@ sources_path = "Sources"
 tests_path = "Tests"
 app_tests_path = "AppTests"
 resources_path = "Resources"
+
+any_file_suffix = "/**/*"
 
 # Swift source files
 swift_files_suffix = "/**/*.swift"
@@ -38,8 +41,7 @@ objc_headers_suffix = "/**/*.h"
 def objc_headers(): return native.glob([sources_path + objc_headers_suffix])
 
 # Resources
-resources_suffix = "/**/*"
-def resource_files(): return native.glob([resources_path + resources_suffix])
+def resource_files(): return native.glob([resources_path + any_file_suffix])
 
 # Target names
 def resources_name(name): return name + resources_path
@@ -55,7 +57,7 @@ def first_party_library(
     deps = [],
     test_deps = [],
     app_test_deps = [],
-    host_app = app_name("//Libraries/HostApp:HostApp")
+    host_app = None,
     ):
     resources_rule = None
     if len(resource_files()) > 0:
@@ -106,7 +108,7 @@ def first_party_library(
             name = swift_app_tests_name(name),
             deps = app_test_deps,
             srcs = swift_app_test_srcs(),
-            host_app = host_app,
+            host_app = create_host_app_if_needed(name, deps, host_app),
         )
 
     if len(objc_app_test_srcs()) > 0:
@@ -114,8 +116,36 @@ def first_party_library(
             name = objc_app_tests_name(name),
             deps = app_test_deps,
             srcs = objc_app_test_srcs(),
-            host_app = host_app,
+            host_app = create_host_app_if_needed(name, deps, host_app),
         )
+
+def create_host_app_if_needed(
+    name,
+    deps,
+    host_app,
+    ):
+    if host_app == None:
+        host_app_name = name + "HostApp"
+        host_app_lib_name = host_app_name + "Lib"
+
+        swift_library_interface(
+            name = host_app_lib_name,
+            srcs = ["//Libraries/HostApp:Sources/AppDelegate.swift"],
+            deps = [":" + name] + deps,
+        )
+
+        # - strip_unused_symbols: when testing a library inside an app, by default the unused symbols are
+        #   removed from the binary. If the binary needs to be tested, the symbols are needed to avoid the
+        #   linker error 'ld: symbol(s) not found for architecture ...'
+        application_interface(
+            name = host_app_name,
+            infoplist = "//Libraries/HostApp:Info.plist",
+            main_target = ":" + host_app_lib_name,
+            strip_unused_symbols = False, 
+        )
+        host_app = ":" + host_app_name
+
+    return host_app
 
 def application(
     name,
@@ -138,7 +168,6 @@ def application(
         name = app_name(name),
         infoplist = infoplist,
         main_target = ":" + name,
-        deps = deps,
     )
 
 def prebuilt_dynamic_framework(
@@ -148,4 +177,11 @@ def prebuilt_dynamic_framework(
     prebuilt_dynamic_framework_interface(
         name = basename_without_extension,
         path = path,
+    )
+
+def exports_files(
+    files,
+    ):
+    exports_files_interface(
+        files = files
     )

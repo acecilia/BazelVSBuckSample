@@ -1,7 +1,8 @@
-load("//config:custom_rules.bzl", "application")
+load("//config:custom_rules.bzl", "exports_files")
 
-application(
-    name = "HostApp",
-    infoplist = "Info.plist",
-    deps = ["//Libraries/SwiftModule:SwiftModule"],
+exports_files(
+    files = [
+      "Sources/AppDelegate.swift",
+      "Info.plist"
+    ]
 )
