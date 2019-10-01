@@ -5,7 +5,7 @@
 MAKEFLAGS = --silent
 
 ifndef BUILDTOOL
-	export BUILDTOOL=buck
+	export BUILDTOOL=bazel
 endif
 
 export ipa_output_path=products

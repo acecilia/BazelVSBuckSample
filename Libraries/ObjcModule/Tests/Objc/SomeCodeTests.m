@@ -1,7 +1,7 @@
 #import <XCTest/XCTest.h>
 #import "ObjcModule/ObjcModule.h"
 
-@interface ObjcModuleTests: XCTestCase
+@interface Tests: XCTestCase
 @end
 
 @implementation Tests

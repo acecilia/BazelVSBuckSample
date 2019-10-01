@@ -37,13 +37,37 @@ def objc_library_interface(
     deps,
     resources_rule = None,
     ):
+    exported_headers = []
+    if len(headers) > 0:
+        # Bazel does not support objc_library that depend on other objc_library
+        # The following genrule is a workaround for it
+        # See: https://github.com/bazelbuild/bazel/issues/9461 and https://github.com/thii/rules_apple_extras
+        exported_headers_rule_name = name + "ExportedHeaders"
+        exported_headers_path = "includedir"
+        native.genrule(
+            name = exported_headers_rule_name,
+            srcs = headers,
+            # Headers can be nested multiple levels, so we use `x.split('/')[::-1][0] for x in headers` to get their basenames
+            outs = [exported_headers_path + "/" + name + "/" + x.split('/')[::-1][0] for x in headers],
+            # Finally we copy all headers to the `exported_headers_path` directory
+            cmd  = "cp $(SRCS) $(RULEDIR)" + "/" + exported_headers_path + "/" + name,
+        )
+        exported_headers = [":" + exported_headers_rule_name]
+
     objc_library(
         name = name,
         srcs = srcs,
-        hdrs = headers,
+        # In order to make sure that the headers under the `exported_headers_path` directory are inside the sandbox 
+        # we have to make the `exported_headers_rule_name` a dependency of the `objc_library`: 
+        # we can do that by setting it as the value for the `hdrs` argument
+        # Also, we still need the initial headers list here, so the `.m` files can import their headers correctly
+        hdrs = headers + exported_headers,
         deps = deps,
         data = get_data_from(resources_rule),
         module_name = name,
+        # Include the directory where the headers are. This will also be passed to rules depending on this one
+        # See: https://docs.bazel.build/versions/master/be/objective-c.html#objc_library.includes
+        includes = [exported_headers_path],
         visibility = ["//visibility:public"],
     )
 
@@ -69,7 +93,7 @@ def objc_test_interface(
     deps,
     host_app = None,
     ):
-    return
+    # return
     # For now having objc tests of objc libraries seems not possible. 
     # See: https://github.com/bazelbuild/bazel/pull/5905#issuecomment-535735561
 
@@ -79,7 +103,6 @@ def objc_test_interface(
         name = test_lib_name,
         srcs = srcs,
         deps = deps,
-        # includes = ["Sources"],
         module_name = test_lib_name,
     )
 

@@ -33,7 +33,7 @@ def resources_group_interface(
         files = files,
     )
 
-# A common interface for a swift of objc library
+# A common interface for a swift or objc library
 def apple_library_interface(
     name,
     srcs,
