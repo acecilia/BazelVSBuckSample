@@ -6,10 +6,13 @@ pool:
 
 strategy:
   matrix:
+    # In bazel, the simulator hangs randomly for around 15 seconds when using Xcode 10.2 or 10.3.
+    # In order to check this, run CI also in Xcode 10.1.
+    # See: https://github.com/bazelbuild/rules_apple/issues/607#issuecomment-537211062
+    xcode-10.1:
+      DEVELOPER_DIR: /Applications/Xcode_10.1.app
     xcode-10.3:
       DEVELOPER_DIR: /Applications/Xcode_10.3.app
-    xcode-11:
-      DEVELOPER_DIR: /Applications/Xcode_11.app
 
 steps:
   # Boot simulator in advance in order to avoid error https://github.com/facebook/xctool/issues/766
