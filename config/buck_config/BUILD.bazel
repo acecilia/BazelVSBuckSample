@@ -1,13 +1,3 @@
-genrule(
-  name = "info_plist",
-  visibility = ["PUBLIC"],
-  srcs = [
-      "Info.plist",
-  ],
-  out = 'Info.plist',
-  cmd = 'cp $SRCDIR/Info.plist $OUT',
-)
-
 xcode_workspace_config(
   name = "workspace",
   workspace_name = "workspace",

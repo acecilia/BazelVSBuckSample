@@ -104,10 +104,8 @@ def apple_test_interface(
         frameworks = [
           "$PLATFORM_DIR/Developer/Library/Frameworks/XCTest.framework"
         ],
-        info_plist = "//config/buck_config:info_plist",
+        info_plist = '//Libraries/HostApp:Info.plist',
         info_plist_substitutions = {
-            "CURRENT_PROJECT_VERSION": "1",
-            "DEVELOPMENT_LANGUAGE": "English",
             "EXECUTABLE_NAME": name,
             "PRODUCT_BUNDLE_IDENTIFIER": PRODUCT_BUNDLE_IDENTIFIER_PREFIX + name,
             "PRODUCT_NAME": name,

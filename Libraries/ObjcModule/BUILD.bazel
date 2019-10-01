@@ -3,25 +3,3 @@ load("//config:custom_rules.bzl", "first_party_library")
 first_party_library(
     name = "ObjcModule",
 )
-
-# load("@rules_cc//cc:defs.bzl", "objc_library")
-# load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
-
-# objc_library(
-#     name = "ObjcModule",
-#     srcs = ["Sources/ObjcModule.m"],
-#     hdrs = ["Sources/ObjcModule.h"],
-#     module_name = "ObjcModule",
-# )
-
-# objc_library(
-#     name = "ObjcModuleTestsLib",
-#     srcs = ["ObjcTests/SomeCodeTests.m"],
-#     deps = [":ObjcModule"],
-# )
-
-# ios_unit_test(
-#     name = "ObjcModuleTests",
-#     minimum_os_version = "8.0",
-#     deps = [":ObjcModuleTestsLib"],
-# )

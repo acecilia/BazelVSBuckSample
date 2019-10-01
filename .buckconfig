@@ -53,4 +53,7 @@
 [buildfile]
   # In order to be able to switch between buck/bazel the build files have to be named the same
   name = BUILD.bazel
+
+[cache]
+  mode = dir
   
