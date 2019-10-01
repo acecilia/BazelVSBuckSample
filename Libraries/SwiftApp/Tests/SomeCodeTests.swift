@@ -6,8 +6,8 @@ final class Tests: XCTestCase {
         XCTAssertEqual(text, "This is an internal property in the app code!")
         XCTAssertEqual(swiftModuleText, "Hello, World!")
         XCTAssertEqual(swiftModuleWithoutTestsText, "Hello, World!")
-        XCTAssertEqual(swiftModuleWithPrebuiltDependencyText1, "AFNetworking version: 1.0")
-        XCTAssertEqual(swiftModuleWithPrebuiltDependencyText2, "FileKit version: v5.0.0")
+        XCTAssertEqual(swiftModuleWithPrebuiltDependencyText1, "Objc dependency version: 1.0")
+        XCTAssertEqual(swiftModuleWithPrebuiltDependencyText2, "Swift dependency version: v5.0.0")
     }
 
     func testHostAppDoesNotExist() {

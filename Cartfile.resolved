@@ -1,2 +1,2 @@
-github "AFNetworking/AFNetworking" "3.2.1"
+github "CocoaLumberjack/CocoaLumberjack" "3.6.0"
 github "nvzqz/FileKit" "6.0.0"

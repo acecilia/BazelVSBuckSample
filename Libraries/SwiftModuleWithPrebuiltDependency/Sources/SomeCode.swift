@@ -1,5 +1,5 @@
-import AFNetworking
+import CocoaLumberjack
 import FileKit
 
-public let text1 = "AFNetworking version: \(AFNetworkingVersionNumber)"
-public let text2 = "FileKit version: \(FileKitInfo.version)"
+public let text1 = "Objc dependency version: \(CocoaLumberjackVersionNumber)"
+public let text2 = "Swift dependency version: \(FileKitInfo.version)"

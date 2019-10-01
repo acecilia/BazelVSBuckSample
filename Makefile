@@ -32,7 +32,7 @@ test: setup_config
 run: setup_config
 # Run the app in the simulator
 ifeq ($(BUILDTOOL),buck)
-	$(BUILDTOOL) install --run --simulator-name "iPhone X" //Libraries/SwiftApp:SwiftAppBundle
+	$(BUILDTOOL) install --run --simulator-name "iPhone 8" //Libraries/SwiftApp:SwiftAppBundle
 else
 	$(BUILDTOOL) run //Libraries/SwiftApp:SwiftAppBundle
 endif

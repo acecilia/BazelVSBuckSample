@@ -1,7 +1,7 @@
 load("//config:custom_rules.bzl", "prebuilt_dynamic_framework")
 
 prebuilt_dynamic_framework(
-    path = "Build/iOS/AFNetworking.framework",
+    path = "Build/iOS/CocoaLumberjack.framework",
 )
 
 prebuilt_dynamic_framework(

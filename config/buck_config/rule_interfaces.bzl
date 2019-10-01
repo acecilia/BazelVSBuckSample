@@ -7,7 +7,7 @@ build_system = "buck"
 # - https://github.com/facebook/buck/issues/2058
 # - https://github.com/airbnb/BuckSample/blob/24472210a105f7e3a5e71842ed79cae7bbc6e07e/Libraries/SwiftWithPrecompiledDependency/BUCK#L9
 prebuilt_dependencies_hack = [
-    "//Carthage:AFNetworking",
+    "//Carthage:CocoaLumberjack",
     "//Carthage:FileKit",
 ]
 

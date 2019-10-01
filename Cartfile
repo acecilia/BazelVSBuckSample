@@ -1,2 +1,2 @@
-github "AFNetworking/AFNetworking"
 github "nvzqz/FileKit"
+github "CocoaLumberjack/CocoaLumberjack"
