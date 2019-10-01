@@ -4,8 +4,12 @@ trigger:
 pool:
   vmImage: 'macOS 10.14'
 
-variables:
-  DEVELOPER_DIR: /Applications/Xcode_10.3.app
+strategy:
+  matrix:
+    xcode103:
+      DEVELOPER_DIR: /Applications/Xcode_10.3.app
+    xcode110:
+      DEVELOPER_DIR: /Applications/Xcode_11.app
 
 steps:
   # Boot simulator in advance in order to avoid error https://github.com/facebook/xctool/issues/766
