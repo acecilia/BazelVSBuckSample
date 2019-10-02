@@ -1,0 +1,79 @@
+{
+  "buildTargets" : [
+    "//Libraries/Common/CPMCommon:CPMCommon",
+    "//Libraries/Common/CPMCommon:CPMCommonTests"
+  ],
+  "optionSet" : {
+    "BazelBuildOptionsDebug" : {
+      "p" : "$(inherited)"
+    },
+    "BazelBuildOptionsRelease" : {
+      "p" : "$(inherited)"
+    },
+    "BazelBuildStartupOptionsDebug" : {
+      "p" : "$(inherited)"
+    },
+    "BazelBuildStartupOptionsRelease" : {
+      "p" : "$(inherited)"
+    },
+    "BuildActionPostActionScript" : {
+      "p" : "$(inherited)"
+    },
+    "BuildActionPreActionScript" : {
+      "p" : "$(inherited)"
+    },
+    "CommandlineArguments" : {
+      "p" : "$(inherited)"
+    },
+    "EnvironmentVariables" : {
+      "p" : "$(inherited)"
+    },
+    "LaunchActionPostActionScript" : {
+      "p" : "$(inherited)"
+    },
+    "LaunchActionPreActionScript" : {
+      "p" : "$(inherited)"
+    },
+    "ProjectGenerationBazelStartupOptions" : {
+      "p" : "$(inherited)"
+    },
+    "TestActionPostActionScript" : {
+      "p" : "$(inherited)"
+    },
+    "TestActionPreActionScript" : {
+      "p" : "$(inherited)"
+    }
+  },
+  "projectName" : "BazelVSBuckSample",
+  "sourceFilters" : [
+    "Libraries/Common/CPMCommon",
+    "Libraries/Common/CPMCommon/Sources",
+    "Libraries/Common/CPMCommon/Sources/CleanArchitecture",
+    "Libraries/Common/CPMCommon/Sources/CleanArchitecture/Flow",
+    "Libraries/Common/CPMCommon/Sources/DataSourceInterfaces",
+    "Libraries/Common/CPMCommon/Sources/DataSourceInterfaces/OnlineCheckIn",
+    "Libraries/Common/CPMCommon/Sources/Entities",
+    "Libraries/Common/CPMCommon/Sources/Entities/Booking",
+    "Libraries/Common/CPMCommon/Sources/Entities/Errors",
+    "Libraries/Common/CPMCommon/Sources/Miscellaneous",
+    "Libraries/Common/CPMCommon/Sources/Miscellaneous/DataLayerConvertible",
+    "Libraries/Common/CPMCommon/Sources/Miscellaneous/Extensions",
+    "Libraries/Common/CPMCommon/Sources/Miscellaneous/Protocols",
+    "Libraries/Common/CPMCommon/Sources/Miscellaneous/World",
+    "Libraries/Common/CPMCommon/Sources/Repositories",
+    "Libraries/Common/CPMCommon/Sources/Repositories/Country",
+    "Libraries/Common/CPMCommon/Sources/Repositories/Country/DataSources",
+    "Libraries/Common/CPMCommon/Sources/Repositories/Country/DataSources/Temp",
+    "Libraries/Common/CPMCommon/Sources/Source",
+    "Libraries/Common/CPMCommon/Sources/Source/Country",
+    "Libraries/Common/CPMCommon/Sources/Source/Country/Error",
+    "Libraries/Common/CPMCommon/Sources/Style",
+    "Libraries/Common/CPMCommon/Sources/Style/DataLayer",
+    "Libraries/Common/CPMCommon/Sources/Style/DataLayer/DataSource",
+    "Libraries/Common/CPMCommon/Sources/Style/Entities",
+    "Libraries/Common/CPMCommon/Sources/Style/Entities/Components",
+    "Libraries/Common/CPMCommon/Tests",
+    "Libraries/Common/CPMCommon/Tests/Entities",
+    "Libraries/Common/CPMCommon/Tests/Miscellaneous"
+  ]
+}

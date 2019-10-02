@@ -37,12 +37,15 @@ else
 	$(BUILDTOOL) run //Libraries/SwiftApp:SwiftAppBundle
 endif
 
+install_tulsi:
+	sh scripts/install_tulsi.sh
+
 project: setup_config clean
 ifeq ($(BUILDTOOL),buck)
 	$(BUILDTOOL) project //config/buck_config:workspace
 	open config/buck_config/workspace.xcworkspace
 else
-	~/Applications/Tulsi.app/Contents/MacOS/Tulsi -- --bazel /usr/local/bin/bazel --genconfig "config/bazel_config/SwiftApp.tulsiproj:all"
+	/Applications/Tulsi.app/Contents/MacOS/Tulsi -- --bazel /usr/local/bin/bazel --genconfig "config/bazel_config/BazelVSBuckSample.tulsiproj:All"
 endif	
 
 export_ipa: setup_config

@@ -26,3 +26,6 @@ Carthage/Build
 # End of https://www.gitignore.io/api/buck,bazel,carthage
 
 products/
+Libraries/SAM/
+*.xcodeproj/
+*.tulsiconf-user

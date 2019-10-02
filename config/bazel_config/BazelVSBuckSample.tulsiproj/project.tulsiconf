@@ -1,0 +1,12 @@
+{
+  "configDefaults" : {
+    "optionSet" : {
+
+    }
+  },
+  "packages" : [
+    "Libraries/Common/CPMCommon"
+  ],
+  "projectName" : "BazelVSBuckSample",
+  "workspaceRoot" : "../../.."
+}
