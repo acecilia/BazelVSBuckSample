@@ -1,7 +1,11 @@
 {
+  "additionalFilePaths" : [
+    "Libraries/SwiftApp/BUILD"
+  ],
   "buildTargets" : [
-    "//Libraries/Common/CPMCommon:CPMCommon",
-    "//Libraries/Common/CPMCommon:CPMCommonTests"
+    "//Libraries/SwiftApp:SwiftApp",
+    "//Libraries/SwiftApp:SwiftAppAppTests",
+    "//Libraries/SwiftApp:SwiftAppTests"
   ],
   "optionSet" : {
     "BazelBuildOptionsDebug" : {
@@ -46,34 +50,16 @@
   },
   "projectName" : "BazelVSBuckSample",
   "sourceFilters" : [
-    "Libraries/Common/CPMCommon",
-    "Libraries/Common/CPMCommon/Sources",
-    "Libraries/Common/CPMCommon/Sources/CleanArchitecture",
-    "Libraries/Common/CPMCommon/Sources/CleanArchitecture/Flow",
-    "Libraries/Common/CPMCommon/Sources/DataSourceInterfaces",
-    "Libraries/Common/CPMCommon/Sources/DataSourceInterfaces/OnlineCheckIn",
-    "Libraries/Common/CPMCommon/Sources/Entities",
-    "Libraries/Common/CPMCommon/Sources/Entities/Booking",
-    "Libraries/Common/CPMCommon/Sources/Entities/Errors",
-    "Libraries/Common/CPMCommon/Sources/Miscellaneous",
-    "Libraries/Common/CPMCommon/Sources/Miscellaneous/DataLayerConvertible",
-    "Libraries/Common/CPMCommon/Sources/Miscellaneous/Extensions",
-    "Libraries/Common/CPMCommon/Sources/Miscellaneous/Protocols",
-    "Libraries/Common/CPMCommon/Sources/Miscellaneous/World",
-    "Libraries/Common/CPMCommon/Sources/Repositories",
-    "Libraries/Common/CPMCommon/Sources/Repositories/Country",
-    "Libraries/Common/CPMCommon/Sources/Repositories/Country/DataSources",
-    "Libraries/Common/CPMCommon/Sources/Repositories/Country/DataSources/Temp",
-    "Libraries/Common/CPMCommon/Sources/Source",
-    "Libraries/Common/CPMCommon/Sources/Source/Country",
-    "Libraries/Common/CPMCommon/Sources/Source/Country/Error",
-    "Libraries/Common/CPMCommon/Sources/Style",
-    "Libraries/Common/CPMCommon/Sources/Style/DataLayer",
-    "Libraries/Common/CPMCommon/Sources/Style/DataLayer/DataSource",
-    "Libraries/Common/CPMCommon/Sources/Style/Entities",
-    "Libraries/Common/CPMCommon/Sources/Style/Entities/Components",
-    "Libraries/Common/CPMCommon/Tests",
-    "Libraries/Common/CPMCommon/Tests/Entities",
-    "Libraries/Common/CPMCommon/Tests/Miscellaneous"
+    "Libraries",
+    "Libraries/SwiftApp",
+    "Libraries/SwiftApp/AppTests",
+    "Libraries/SwiftApp/Sources",
+    "Libraries/SwiftApp/Tests",
+    "Libraries/SwiftModule",
+    "Libraries/SwiftModule/Sources",
+    "Libraries/SwiftModuleWithPrebuiltDependency",
+    "Libraries/SwiftModuleWithPrebuiltDependency/Sources",
+    "Libraries/SwiftModuleWithoutTests",
+    "Libraries/SwiftModuleWithoutTests/Sources"
   ]
 }

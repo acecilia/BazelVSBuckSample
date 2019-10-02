@@ -5,7 +5,7 @@
     }
   },
   "packages" : [
-    "Libraries/Common/CPMCommon"
+    "Libraries/SwiftApp"
   ],
   "projectName" : "BazelVSBuckSample",
   "workspaceRoot" : "../../.."
