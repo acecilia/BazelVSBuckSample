@@ -1,4 +1,5 @@
 load("//config:constants.bzl", "SWIFT_VERSION", "PRODUCT_BUNDLE_IDENTIFIER_PREFIX")
+load("//config:functions.bzl", "get_basename")
 
 build_system = "buck"
 
@@ -15,7 +16,7 @@ def exports_files_interface(
     files,
     ):
     for file in files:
-        basename = file.split('/')[::-1][0]
+        basename = get_basename(file)
         native.genrule(
             name = file,
             srcs = [file],

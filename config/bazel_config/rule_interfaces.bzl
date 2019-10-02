@@ -4,6 +4,7 @@ load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test", "ios_applicatio
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_dynamic_framework_import")
 load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_group")
 load("//config:constants.bzl", "MINIMUM_OS_VERSION", "SWIFT_VERSION", "PRODUCT_BUNDLE_IDENTIFIER_PREFIX")
+load("//config:functions.bzl", "get_basename")
 
 build_system = "bazel"
 
@@ -47,8 +48,8 @@ def objc_library_interface(
         native.genrule(
             name = exported_headers_rule_name,
             srcs = headers,
-            # Headers can be nested multiple levels, so we use `x.split('/')[::-1][0] for x in headers` to get their basenames
-            outs = [exported_headers_path + "/" + name + "/" + x.split('/')[::-1][0] for x in headers],
+            # Headers can be nested multiple levels, so we have to calculate their basenames
+            outs = [exported_headers_path + "/" + name + "/" + get_basename(x) for x in headers],
             # Finally we copy all headers to the `exported_headers_path` directory
             cmd  = "cp $(SRCS) $(RULEDIR)" + "/" + exported_headers_path + "/" + name,
         )

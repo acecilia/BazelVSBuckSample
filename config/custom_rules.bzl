@@ -13,8 +13,14 @@ load(
     "swift_library_interface", 
     "swift_test_interface", 
     "prebuilt_dynamic_framework_interface",
-    "application_interface"
+    "application_interface",
     )
+
+load(
+    "//config:functions.bzl", 
+    "get_basename_without_extension",
+    )
+
 
 # Constants
 sources_path = "Sources"
@@ -173,7 +179,7 @@ def application(
 def prebuilt_dynamic_framework(
     path,
     ):
-    basename_without_extension = path.replace('.', '/').split('/')[::-1][1]
+    basename_without_extension = get_basename_without_extension(path)
     prebuilt_dynamic_framework_interface(
         name = basename_without_extension,
         path = path,
