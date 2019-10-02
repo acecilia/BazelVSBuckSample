@@ -56,4 +56,8 @@
 
 [cache]
   mode = dir
+
+[sandbox]
+  darwin_sandbox_enabled = true
+  genrule_sandbox_enabled = true
   
