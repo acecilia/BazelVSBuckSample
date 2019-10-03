@@ -21,9 +21,7 @@
   # iphonesimulator_target_sdk_version = 11.0
   # iphoneos_target_sdk_version = 11.0
   provisioning_profile_read_command = security cms -Di
-  # In order to avoid error https://github.com/facebook/xctool/issues/766, we need to boot the simulator in advance, before starting buck
-  # See: https://github.com/facebook/xctool/pull/767
-  # That is the reason why the following line specifies the simulator name: so it matches the one inside azure-pipelines.yml
+  # The simulator specified here should match the one booted in advance on CI builds. See the 'azure-pipelines.yml' file for more information
   xctool_default_destination_specifier = platform=iOS Simulator,name=iPhone 8,OS=latest
   xctool_path = tools/xctool/bin/xctool
 

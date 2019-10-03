@@ -17,8 +17,9 @@ steps:
   - script: |
       sudo xcode-select -s "$DEVELOPER_DIR"
     displayName: Select Xcode version
-  # Boot simulator in advance in order to avoid error https://github.com/facebook/xctool/issues/766
-  # See: https://github.com/facebook/xctool/pull/767
+  # Boot simulator in advance because:
+  # * It is needed as a workaround for the error https://github.com/facebook/xctool/issues/766 (See also: https://github.com/facebook/xctool/pull/767)
+  # * It makes testing faster in buck, as the simulator is already booted. See: https://github.com/airbnb/BuckSample/issues/121#issuecomment-532122181
   - script: |
       xcrun simctl boot "iPhone 8"
     displayName: Boot simulator
