@@ -49,7 +49,10 @@ ifeq ($(BUILDTOOL),buck)
 	open config/buck_config/workspace.xcworkspace
 else
 	/Applications/Tulsi.app/Contents/MacOS/Tulsi -- --bazel /usr/local/bin/bazel --genconfig "config/bazel_config/BazelVSBuckSample.tulsiproj:All"
-endif	
+endif
+
+project_xchammer:
+	xchammer generate "XCHammer.yaml"
 
 export_ipa: setup_config
 # Export the app into an ipa
