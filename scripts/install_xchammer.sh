@@ -4,7 +4,7 @@ set -eou pipefail
 download_dir="tools/xchammer"
 rm -rf "$download_dir"
 mkdir -p "$download_dir"
-git clone https://github.com/pinterest/xchammer "$download_dir"
+git clone "https://github.com/pinterest/xchammer" "$download_dir"
 cd "$download_dir"
 git checkout f5fe4657eb751ababfa4ad5986afaa691910080f
 

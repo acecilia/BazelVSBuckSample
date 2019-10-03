@@ -20,7 +20,7 @@ build --ios_simulator_device="iPhone 8"
 # build --xcode_version=10.3
 
 # During development
-# build --test_output=all --cache_test_results=no
+# build -s --test_output=all --cache_test_results=no
 
 # References:
 # - https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/ci_build/install/.bazelrc

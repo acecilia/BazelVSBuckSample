@@ -41,7 +41,6 @@ def apple_library_interface(
     headers,
     deps,
     resources_rule,
-    swift_version,
     ):
     # In buck, resources are used as dependencies. See: https://buck.build/rule/apple_resource.html
     if resources_rule != None:
@@ -53,7 +52,7 @@ def apple_library_interface(
         exported_headers = headers,
         modular = True,
         deps = deps,
-        swift_version = swift_version,
+        swift_version = SWIFT_VERSION,
         visibility = ["PUBLIC"],
     )
 
@@ -70,7 +69,6 @@ def objc_library_interface(
         headers = headers,
         deps = deps,
         resources_rule = resources_rule,
-        swift_version = None,
     )
 
 def swift_library_interface(
@@ -85,7 +83,6 @@ def swift_library_interface(
         headers = None,
         deps = deps,
         resources_rule = resources_rule,
-        swift_version = SWIFT_VERSION,
     )
 
 def apple_test_interface(
@@ -93,7 +90,6 @@ def apple_test_interface(
     srcs,
     deps,
     host_app,
-    swift_version,
     ):
     deps = deps + prebuilt_dependencies_hack
 
@@ -112,7 +108,7 @@ def apple_test_interface(
             "PRODUCT_NAME": name,
         },
         test_host_app = host_app,
-        swift_version = swift_version,
+        swift_version = SWIFT_VERSION,
     )
 
 def objc_test_interface(
@@ -126,7 +122,6 @@ def objc_test_interface(
         srcs = srcs,
         deps = deps,
         host_app = host_app,
-        swift_version = None,
     )
 
 def swift_test_interface(
@@ -140,7 +135,6 @@ def swift_test_interface(
         srcs = srcs,
         deps = deps,
         host_app = host_app,
-        swift_version = SWIFT_VERSION,
     )
 
 def prebuilt_dynamic_framework_interface(
