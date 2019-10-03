@@ -14,9 +14,15 @@ To see their difference in terms of performance, refer to the [latest build in t
 
 # Main issues
 
-* [02/10/2019] Buck rule `prebuilt_apple_framework` does not copy dynamic libraries into the final bundle. See: https://github.com/facebook/buck/issues/2058
-* [02/10/2019] Buck does not cache test results. See: https://github.com/facebook/buck/issues/2320
-* [02/10/2019] Bazel does not support an objc library as dependency of another objc library. See: https://github.com/bazelbuild/bazel/issues/9461
+* 02/10/2019 - Buck rule `prebuilt_apple_framework` does not copy dynamic libraries into the final bundle  
+[[Reference](https://github.com/facebook/buck/issues/2058)]  
+[[Workaround implemented](https://github.com/acecilia/BazelVSBuckSample/blob/master/config/buck_config/rule_interfaces.bzl#L10)]
+* 02/10/2019 - Buck does not cache test results  
+[[Reference](https://github.com/facebook/buck/issues/2320)]  
+[No workaround available]
+* 02/10/2019 - Bazel does not support an objc library as dependency of another objc library  
+[[Reference](https://github.com/bazelbuild/bazel/issues/9461)]  
+[[Workaround implemented](https://github.com/acecilia/BazelVSBuckSample/blob/master/config/bazel_config/rule_interfaces.bzl#L46)]
 
 # References
 
