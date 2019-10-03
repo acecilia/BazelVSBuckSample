@@ -40,6 +40,9 @@ endif
 install_tulsi:
 	sh scripts/install_tulsi.sh
 
+install_xchammer:
+	sh scripts/install_xchammer.sh
+
 project: setup_config clean
 ifeq ($(BUILDTOOL),buck)
 	$(BUILDTOOL) project //config/buck_config:workspace
