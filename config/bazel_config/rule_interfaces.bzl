@@ -33,6 +33,7 @@ def get_data_from(resources_rule):
 
 def objc_library_interface(
     name,
+    tests, # Unused for now, only used in buck
     srcs,
     headers,
     deps,
@@ -74,6 +75,7 @@ def objc_library_interface(
 
 def swift_library_interface(
     name,
+    tests, # Unused for now, only used in buck
     srcs,
     deps,
     resources_rule = None,

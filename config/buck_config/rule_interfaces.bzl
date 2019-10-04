@@ -37,6 +37,7 @@ def resources_group_interface(
 # A common interface for a swift or objc library
 def apple_library_interface(
     name,
+    tests,
     srcs,
     headers,
     deps,
@@ -48,6 +49,7 @@ def apple_library_interface(
 
     native.apple_library(
         name = name,
+        tests = tests,
         srcs = srcs,
         exported_headers = headers,
         modular = True,
@@ -58,6 +60,7 @@ def apple_library_interface(
 
 def objc_library_interface(
     name,
+    tests,
     srcs,
     headers,
     deps,
@@ -65,6 +68,7 @@ def objc_library_interface(
     ):
     apple_library_interface(
         name = name,
+        tests = tests,
         srcs = srcs,
         headers = headers,
         deps = deps,
@@ -73,12 +77,14 @@ def objc_library_interface(
 
 def swift_library_interface(
     name,
+    tests,
     srcs,
     deps,
     resources_rule = None,
     ):
     apple_library_interface(
         name = name,
+        tests = tests,
         srcs = srcs,
         headers = None,
         deps = deps,

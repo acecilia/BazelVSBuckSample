@@ -65,6 +65,51 @@ def first_party_library(
     app_test_deps = [],
     host_app = None,
     ):
+    # The test targets that are created together with this library
+    tests = []
+
+    # The test targets can be swift, objc or both
+    test_deps = [":" + name] + test_deps
+    if len(swift_test_srcs()) > 0:
+        test_name = swift_tests_name(name)
+        tests = tests + [":" + test_name]
+        swift_test_interface(
+            name = test_name,
+            deps = test_deps,
+            srcs = swift_test_srcs(),
+        )
+
+    if len(objc_test_srcs()) > 0:
+        test_name = objc_tests_name(name)
+        tests = tests + [":" + test_name]
+        objc_test_interface(
+            name = test_name,
+            deps = test_deps,
+            srcs = objc_test_srcs(),
+        )
+
+    # The app test targets can be swift, objc or both
+    app_test_deps = [":" + name] + app_test_deps
+    if len(swift_app_test_srcs()) > 0:
+        test_name = swift_app_tests_name(name)
+        tests = tests + [":" + test_name]
+        swift_test_interface(
+            name = test_name,
+            deps = app_test_deps,
+            srcs = swift_app_test_srcs(),
+            host_app = create_host_app_if_needed(name, deps, host_app),
+        )
+
+    if len(objc_app_test_srcs()) > 0:
+        test_name = objc_app_tests_name(name)
+        tests = tests + [":" + test_name]
+        objc_test_interface(
+            name = test_name,
+            deps = app_test_deps,
+            srcs = objc_app_test_srcs(),
+            host_app = create_host_app_if_needed(name, deps, host_app),
+        )
+
     resources_rule = None
     if len(resource_files()) > 0:
         resources_group_interface(
@@ -77,6 +122,7 @@ def first_party_library(
     if len(swift_srcs()) > 0:
         swift_library_interface(
             name = name,
+            tests = tests,
             srcs = swift_srcs(),
             deps = deps,
             resources_rule = resources_rule,
@@ -85,44 +131,11 @@ def first_party_library(
     if len(objc_srcs()) > 0:
         objc_library_interface(
             name = name,
+            tests = tests,
             srcs = objc_srcs(),
             headers = objc_headers(),
             deps = deps,
             resources_rule = resources_rule,
-        )
-
-    # The test targets can be swift, objc or both
-    test_deps = [":" + name] + test_deps
-    if len(swift_test_srcs()) > 0:
-        swift_test_interface(
-            name = swift_tests_name(name),
-            deps = test_deps,
-            srcs = swift_test_srcs(),
-        )
-
-    if len(objc_test_srcs()) > 0:
-        objc_test_interface(
-            name = objc_tests_name(name),
-            deps = test_deps,
-            srcs = objc_test_srcs(),
-        )
-
-    # The app test targets can be swift, objc or both
-    app_test_deps = [":" + name] + app_test_deps
-    if len(swift_app_test_srcs()) > 0:
-        swift_test_interface(
-            name = swift_app_tests_name(name),
-            deps = app_test_deps,
-            srcs = swift_app_test_srcs(),
-            host_app = create_host_app_if_needed(name, deps, host_app),
-        )
-
-    if len(objc_app_test_srcs()) > 0:
-        objc_test_interface(
-            name = objc_app_tests_name(name),
-            deps = app_test_deps,
-            srcs = objc_app_test_srcs(),
-            host_app = create_host_app_if_needed(name, deps, host_app),
         )
 
 def create_host_app_if_needed(
@@ -136,6 +149,7 @@ def create_host_app_if_needed(
 
         swift_library_interface(
             name = host_app_lib_name,
+            tests = [],
             srcs = ["//Libraries/HostApp:Sources/AppDelegate.swift"],
             deps = [":" + name] + deps,
         )
