@@ -17,10 +17,19 @@ load(
     )
 
 load(
+    "//config:configs.bzl", 
+    "swift_library_compiler_flags",
+    )
+
+load(
+    "//config:constants.bzl", 
+    "SWIFT_DEBUG_COMPILER_FLAGS",
+    )
+
+load(
     "//config:functions.bzl", 
     "get_basename_without_extension",
     )
-
 
 # Constants
 sources_path = "Sources"
@@ -63,6 +72,7 @@ def first_party_library(
     deps = [],
     test_deps = [],
     app_test_deps = [],
+    swift_compiler_flags = [],
     host_app = None,
     ):
     # The test targets that are created together with this library
@@ -125,6 +135,7 @@ def first_party_library(
             tests = tests,
             srcs = swift_srcs(),
             deps = deps,
+            swift_compiler_flags = swift_compiler_flags + swift_library_compiler_flags(),
             resources_rule = resources_rule,
         )
 
@@ -150,8 +161,9 @@ def create_host_app_if_needed(
         swift_library_interface(
             name = host_app_lib_name,
             tests = [],
-            srcs = ["//Libraries/HostApp:Sources/AppDelegate.swift"],
+            srcs = ["//Support/Files:AppDelegate.swift"],
             deps = [":" + name] + deps,
+            swift_compiler_flags = SWIFT_DEBUG_COMPILER_FLAGS,
         )
 
         # - strip_unused_symbols: when testing a library inside an app, by default the unused symbols are
@@ -159,7 +171,7 @@ def create_host_app_if_needed(
         #   linker error 'ld: symbol(s) not found for architecture ...'
         application_interface(
             name = host_app_name,
-            infoplist = "//Libraries/HostApp:Info.plist",
+            infoplist = "//Support/Files:Info.plist",
             main_target = ":" + host_app_lib_name,
             strip_unused_symbols = False, 
         )
@@ -180,6 +192,7 @@ def application(
         deps = deps,
         test_deps = test_deps,
         app_test_deps = app_test_deps,
+        swift_compiler_flags = ["-enable-testing"],
         host_app = ":" + app_name(name),
     )
 

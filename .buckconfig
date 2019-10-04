@@ -2,15 +2,13 @@
 
 [cxx]
   default_platform = iphonesimulator-x86_64
-  cflags = -g -fmodules -fobjc-arc -D BUCK -w $(config custom.other_cflags)
-  cxxflags = -fobjc-arc -std=c++14 -D DEBUG -g $(config custom.other_cxxflags)
+  cflags = -g -fmodules -fobjc-arc -D BUCK -w
+  cxxflags = -fobjc-arc -std=c++14 -D DEBUG -g
   combined_preprocess_and_compile = true
   pch_enabled = false
-  ldflags = -Xlinker -objc_abi_version -Xlinker 2 -fobjc-arc -fobjc-link-runtime $(config custom.other_cxxflags)
+  ldflags = -Xlinker -objc_abi_version -Xlinker 2 -fobjc-arc -fobjc-link-runtime
 
 [swift]
-  version = 5
-  compiler_flags = -DBUCK -whole-module-optimization $(config custom.optimization) $(config custom.config_swift_compiler_flags) $(config custom.other_swift_compiler_flags)
   use_filelist = true
 
 [apple]
@@ -39,15 +37,6 @@
 
 [build]
   threads = 4
-
-[custom]
-  config = debug
-  optimization = -Onone
-  config_swift_compiler_flags = -DDEBUG -enable-testing -g
-  code_coverage_cflags = -fprofile-instr-generate -fcoverage-mapping
-  code_coverage_cxxflags = -fprofile-instr-generate -fcoverage-mapping
-  code_coverage_ldflags = -fprofile-instr-generate
-  code_coverage_swift_compiler_flags = -profile-generate -profile-coverage-mapping
 
 [buildfile]
   # In order to be able to switch between buck/bazel the build files have to be named the same

@@ -3,7 +3,7 @@ load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test", "ios_application")
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_dynamic_framework_import")
 load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_group")
-load("//config:constants.bzl", "MINIMUM_OS_VERSION", "SWIFT_VERSION", "PRODUCT_BUNDLE_IDENTIFIER_PREFIX")
+load("//config:constants.bzl", "MINIMUM_OS_VERSION", "SWIFT_VERSION", "PRODUCT_BUNDLE_IDENTIFIER_PREFIX", "SWIFT_DEBUG_COMPILER_FLAGS")
 load("//config:functions.bzl", "get_basename")
 
 build_system = "bazel"
@@ -78,6 +78,7 @@ def swift_library_interface(
     tests, # Unused for now, only used in buck
     srcs,
     deps,
+    swift_compiler_flags,
     resources_rule = None,
     ):
     swift_library(
@@ -86,7 +87,7 @@ def swift_library_interface(
         deps = deps,
         data = get_data_from(resources_rule),
         module_name = name,
-        copts = ["-swift-version", SWIFT_VERSION],
+        copts = swift_compiler_flags + ["-swift-version", SWIFT_VERSION],
         visibility = ["//visibility:public"],
     )
 
@@ -130,7 +131,7 @@ def swift_test_interface(
         srcs = srcs,
         deps = deps,
         module_name = test_lib_name,
-        copts = ["-swift-version", SWIFT_VERSION],
+        copts = ["-swift-version", SWIFT_VERSION] + SWIFT_DEBUG_COMPILER_FLAGS,
     )
 
     ios_unit_test(

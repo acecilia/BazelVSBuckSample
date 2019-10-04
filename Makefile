@@ -5,7 +5,7 @@
 MAKEFLAGS = --silent
 
 ifndef BUILDTOOL
-	export BUILDTOOL=bazel
+	export BUILDTOOL=buck
 endif
 
 export ipa_output_path=products
@@ -45,8 +45,10 @@ install_xchammer:
 
 project: setup_config clean
 ifeq ($(BUILDTOOL),buck)
-	$(BUILDTOOL) project //config/buck_config:workspace
-	open config/buck_config/workspace.xcworkspace
+	# Generate xcode projects for apps and libraries
+	$(BUILDTOOL) project $$(buck targets //Libraries/... --type apple_bundle apple_library)
+	# Rename shared schemes of the workspaces to All, as what they do is build and test all targets
+	find . -path '*.xcworkspace/xcshareddata/xcschemes/*.xcscheme' -execdir mv {} All.xcscheme \;
 else
 	/Applications/Tulsi.app/Contents/MacOS/Tulsi -- --bazel /usr/local/bin/bazel --genconfig "config/bazel_config/BazelVSBuckSample.tulsiproj:All"
 endif
@@ -76,7 +78,7 @@ else
 endif
 
 clean: setup_config
-	find . \( -name '*.xcworkspace' -o -name '*.xcodeproj' -o -name '*.d' -o -name '*.dia' -o -name '*.o' \) -exec rm -rf {} +
+	find . \( -name '*.xcworkspace' -o -name '*.xcodeproj' \) -exec rm -rf {} +
 	$(BUILDTOOL) clean
 
 # Actions for all build tools

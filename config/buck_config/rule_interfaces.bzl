@@ -1,5 +1,6 @@
-load("//config:constants.bzl", "SWIFT_VERSION", "PRODUCT_BUNDLE_IDENTIFIER_PREFIX")
+load("//config:constants.bzl", "SWIFT_VERSION", "PRODUCT_BUNDLE_IDENTIFIER_PREFIX", "SWIFT_DEBUG_COMPILER_FLAGS")
 load("//config:functions.bzl", "get_basename")
+load("//config/buck_config:buck.bzl", "plist_substitutions", "xcode_library_configs", "xcode_app_configs")
 
 build_system = "buck"
 
@@ -35,12 +36,13 @@ def resources_group_interface(
     )
 
 # A common interface for a swift or objc library
-def apple_library_interface(
+def _apple_library_interface(
     name,
     tests,
     srcs,
     headers,
     deps,
+    swift_compiler_flags,
     resources_rule,
     ):
     # In buck, resources are used as dependencies. See: https://buck.build/rule/apple_resource.html
@@ -56,6 +58,8 @@ def apple_library_interface(
         deps = deps,
         swift_version = SWIFT_VERSION,
         visibility = ["PUBLIC"],
+        configs = xcode_library_configs(name),
+        swift_compiler_flags = swift_compiler_flags,
     )
 
 def objc_library_interface(
@@ -66,12 +70,13 @@ def objc_library_interface(
     deps,
     resources_rule = None,
     ):
-    apple_library_interface(
+    _apple_library_interface(
         name = name,
         tests = tests,
         srcs = srcs,
         headers = headers,
         deps = deps,
+        swift_compiler_flags = None,
         resources_rule = resources_rule,
     )
 
@@ -80,21 +85,24 @@ def swift_library_interface(
     tests,
     srcs,
     deps,
+    swift_compiler_flags,
     resources_rule = None,
     ):
-    apple_library_interface(
+    _apple_library_interface(
         name = name,
         tests = tests,
         srcs = srcs,
         headers = None,
         deps = deps,
+        swift_compiler_flags = swift_compiler_flags,
         resources_rule = resources_rule,
     )
 
-def apple_test_interface(
+def _apple_test_interface(
     name,
     srcs,
     deps,
+    swift_compiler_flags,
     host_app,
     ):
     deps = deps + prebuilt_dependencies_hack
@@ -107,14 +115,12 @@ def apple_test_interface(
         frameworks = [
           "$PLATFORM_DIR/Developer/Library/Frameworks/XCTest.framework"
         ],
-        info_plist = '//Libraries/HostApp:Info.plist',
-        info_plist_substitutions = {
-            "EXECUTABLE_NAME": name,
-            "PRODUCT_BUNDLE_IDENTIFIER": PRODUCT_BUNDLE_IDENTIFIER_PREFIX + name,
-            "PRODUCT_NAME": name,
-        },
+        info_plist = '//Support/Files:Info.plist',
+        info_plist_substitutions = plist_substitutions(name),
         test_host_app = host_app,
         swift_version = SWIFT_VERSION,
+        swift_compiler_flags = swift_compiler_flags,
+        configs = xcode_library_configs(name),
     )
 
 def objc_test_interface(
@@ -123,10 +129,11 @@ def objc_test_interface(
     deps,
     host_app = None,
     ):
-    apple_test_interface(
+    _apple_test_interface(
         name = name,
         srcs = srcs,
         deps = deps,
+        swift_compiler_flags = None,
         host_app = host_app,
     )
 
@@ -136,10 +143,11 @@ def swift_test_interface(
     deps,
     host_app = None,
     ):
-    apple_test_interface(
+    _apple_test_interface(
         name = name,
         srcs = srcs,
         deps = deps,
+        swift_compiler_flags = SWIFT_DEBUG_COMPILER_FLAGS,
         host_app = host_app,
     )
 
@@ -167,9 +175,13 @@ def application_interface(
     binary_name = name + "Binary"
     native.apple_binary(
         name = binary_name,
-        srcs = [],
+        # We need a dummy source here for the generated xcode project to work, otherwise
+        # xcode shows an error saying 'Build input file cannot be found: '...SwiftAppBundle.app/SwiftAppBundle''
+        srcs = ["//Support/Files:Dummy.swift"],
         deps = [main_target],
         linker_flags = linker_flags,
+        swift_version = SWIFT_VERSION,
+        configs = xcode_app_configs(name),
     )
 
     native.apple_bundle(
@@ -177,11 +189,7 @@ def application_interface(
         extension = "app",
         binary = ":" + binary_name,
         info_plist = infoplist,
-        info_plist_substitutions = {
-            "EXECUTABLE_NAME": name,
-            "PRODUCT_BUNDLE_IDENTIFIER": PRODUCT_BUNDLE_IDENTIFIER_PREFIX + name,
-            "PRODUCT_NAME": name,
-        },
+        info_plist_substitutions = plist_substitutions(name),
         deps = prebuilt_dependencies_hack,
         visibility = ["PUBLIC"],
     )
