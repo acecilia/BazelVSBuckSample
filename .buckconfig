@@ -1,4 +1,4 @@
-# Most of this file is taken from https://github.com/airbnb/BuckSample/blob/master/.buckconfig
+# For more information about the parameters used here refer to https://buck.build/files-and-dirs/buckconfig.html
 
 [cxx]
   default_platform = iphonesimulator-x86_64
@@ -12,28 +12,21 @@
   use_filelist = true
 
 [apple]
+  # Needed in order to be able to build swift and objective-c (otherwise buck fails)
   use_swift_delegate = false
+  # Buck by default does some tricks to speed up builds. This disables them, as they are not needed for now and can introduce problems
   use_header_maps_in_xcode = false
-  generate_missing_umbrella_headers = true
-  # Specifying the sdk version was leading to the following error: https://twitter.com/pilky/status/1158387254055845890
-  # iphonesimulator_target_sdk_version = 11.0
-  # iphoneos_target_sdk_version = 11.0
+  # The command to decode provisioning profiles
   provisioning_profile_read_command = security cms -Di
   # The simulator specified here should match the one booted in advance on CI builds. See the 'azure-pipelines.yml' file for more information
   xctool_default_destination_specifier = platform=iOS Simulator,name=iPhone 8,OS=latest
   xctool_path = tools/xctool/bin/xctool
 
-[parser]
-  polyglot_parsing_enabled = true
-  default_build_file_syntax = SKYLARK
-
 [project]
+  ide = xcode
   ide_force_kill = always
   project_schemes = true
-  ide = xcode
   allow_symlinks = forbid
-  ignore = tools, \
-           .git, \
 
 [build]
   threads = 4
@@ -46,6 +39,7 @@
   mode = dir
 
 [sandbox]
+  # Enable sandbox
   darwin_sandbox_enabled = true
   genrule_sandbox_enabled = true
   
