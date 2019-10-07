@@ -1,7 +1,6 @@
 load("//config:custom_rules.bzl", "first_party_library")
 
 first_party_library(
-    name = "SwiftModuleWithPrebuiltDependency",
     deps = [
         "//Carthage:CocoaLumberjack",
         "//Carthage:FileKit",

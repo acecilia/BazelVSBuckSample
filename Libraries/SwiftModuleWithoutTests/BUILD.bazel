@@ -1,5 +1,3 @@
 load("//config:custom_rules.bzl", "first_party_library")
 
-first_party_library(
-    name = "SwiftModuleWithoutTests",
-)
+first_party_library()

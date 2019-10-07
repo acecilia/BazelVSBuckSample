@@ -29,6 +29,7 @@ load(
 load(
     "//config:functions.bzl", 
     "get_basename_without_extension",
+    "get_basename",
     )
 
 # Constants
@@ -68,13 +69,38 @@ def app_name(name): return name + "Bundle"
 
 # Macros
 def first_party_library(
-    name,
     deps = [],
     test_deps = [],
     app_test_deps = [],
-    swift_compiler_flags = [],
     host_app = None,
     ):
+    # Infer name from the path of the package
+    name = get_basename(native.package_name())
+
+    # No compiler flags are allowed when using this macro: 
+    # build implementation detais should not be present in the BUILD files
+    swift_compiler_flags = []
+
+    _first_party_library(
+        name = name,
+        deps = deps,
+        test_deps = test_deps,
+        app_test_deps = app_test_deps,
+        swift_compiler_flags = [],
+        host_app = host_app,
+    )
+
+def _first_party_library(
+    deps,
+    test_deps,
+    app_test_deps,
+    swift_compiler_flags,
+    host_app,
+    name = None,
+    ):
+    # Infer name from the path of the package
+    name = name or get_basename(native.package_name())
+
     # The test targets that are created together with this library
     tests = []
 
@@ -107,7 +133,7 @@ def first_party_library(
             name = test_name,
             deps = app_test_deps,
             srcs = swift_app_test_srcs(),
-            host_app = create_host_app_if_needed(name, deps, host_app),
+            host_app = _create_host_app_if_needed(name, deps, host_app),
         )
 
     if len(objc_app_test_srcs()) > 0:
@@ -117,7 +143,7 @@ def first_party_library(
             name = test_name,
             deps = app_test_deps,
             srcs = objc_app_test_srcs(),
-            host_app = create_host_app_if_needed(name, deps, host_app),
+            host_app = _create_host_app_if_needed(name, deps, host_app),
         )
 
     resources_rule = None
@@ -149,7 +175,7 @@ def first_party_library(
             resources_rule = resources_rule,
         )
 
-def create_host_app_if_needed(
+def _create_host_app_if_needed(
     name,
     deps,
     host_app,
@@ -180,14 +206,16 @@ def create_host_app_if_needed(
     return host_app
 
 def application(
-    name,
     infoplist,
     deps = [],
     test_deps = [],
     app_test_deps = [],
     ):
+    # Infer name from the path of the package
+    name = get_basename(native.package_name())
+
     # Library with the code of the app
-    first_party_library(
+    _first_party_library(
         name = name,
         deps = deps,
         test_deps = test_deps,
