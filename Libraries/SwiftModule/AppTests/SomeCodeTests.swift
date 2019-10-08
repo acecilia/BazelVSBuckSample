@@ -2,7 +2,12 @@ import XCTest
 import SwiftModule
 
 final class Tests: XCTestCase {
-    func testResources() {
+    func testResourceInRoot() {
         XCTAssertEqual(textFileContent, "Hello, World!")
+    }
+
+    func testResourceInSubdirectory() {
+        XCTAssertEqual(textFileContent2, "Hello, World!")
+
     }
 }

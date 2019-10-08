@@ -30,9 +30,18 @@ def resources_group_interface(
     name,
     files,
     ):
+    # Buck does not support generating a resources bundle: using a genrule is a workaround
+    # See: https://github.com/facebook/buck/issues/1483
+    genrule_name = name + "GenRule"
+    native.genrule(
+        name = genrule_name,
+        srcs = files,
+        out = name + ".bundle",
+        cmd = "mkdir $OUT && cp $SRCS $OUT",
+    )
     native.apple_resource(
         name = name,
-        files = files,
+        dirs = [":" + genrule_name],
     )
 
 # A common interface for a swift or objc library

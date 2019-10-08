@@ -10,6 +10,11 @@ final class Tests: XCTestCase {
         XCTAssertEqual(swiftModuleWithPrebuiltDependencyText2, "Swift dependency version: v5.0.0")
     }
 
+    func testBundleAccess() {
+        XCTAssertEqual(swiftModuleTextFileContent, nil)
+        XCTAssertEqual(swiftModuleTextFileContent2, nil)
+    }
+
     func testHostAppDoesNotExist() {
         let delegateText = (UIApplication.shared.delegate as? AppDelegate)?.text
         XCTAssertEqual(delegateText, nil)

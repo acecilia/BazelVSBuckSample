@@ -2,7 +2,7 @@ load("@rules_cc//cc:defs.bzl", "objc_library")
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test", "ios_application")
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_dynamic_framework_import")
-load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_group")
+load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle")
 load("//config:constants.bzl", "MINIMUM_OS_VERSION", "SWIFT_VERSION", "PRODUCT_BUNDLE_IDENTIFIER_PREFIX", "SWIFT_DEBUG_COMPILER_FLAGS")
 load("//config:functions.bzl", "get_basename")
 
@@ -20,7 +20,7 @@ def resources_group_interface(
     name,
     files,
     ):
-    apple_resource_group(
+    apple_resource_bundle(
         name = name,
         resources = files,
     )

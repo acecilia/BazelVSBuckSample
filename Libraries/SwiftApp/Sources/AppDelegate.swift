@@ -27,6 +27,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 let text = "This is an internal property in the app code!"
 let swiftModuleText = SwiftModule.text
+let swiftModuleTextFileContent = SwiftModule.textFileContent
+let swiftModuleTextFileContent2 = SwiftModule.textFileContent2
 let swiftModuleWithoutTestsText = SwiftModuleWithoutTests.text
 let swiftModuleWithPrebuiltDependencyText1 = SwiftModuleWithPrebuiltDependency.text1
 let swiftModuleWithPrebuiltDependencyText2 = SwiftModuleWithPrebuiltDependency.text2

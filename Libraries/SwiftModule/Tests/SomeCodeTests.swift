@@ -6,8 +6,13 @@ final class Tests: XCTestCase {
         XCTAssertEqual(text, "Hello, World!")
     }
 
-    func testResources() {
+    func testResourceInRoot() {
         // The content of the file should be nil because during unit testing there is no bundle containing the resources
         XCTAssertEqual(textFileContent, nil)
+    }
+
+    func testResourceInSubdirectory() {
+        // The content of the file should be nil because during unit testing there is no bundle containing the resources
+        XCTAssertEqual(textFileContent2, nil)
     }
 }
