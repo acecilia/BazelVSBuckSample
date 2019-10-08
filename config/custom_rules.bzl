@@ -43,14 +43,14 @@ Resources = "Resources"
 swift = "swift"
 m = "m"
 h = "h"
-Objc = "Objc"
+objc = "objc"
 
 # Target names
 def resources_name(name): return name + Resources
 def swift_tests_name(name): return name + Tests
 def swift_app_tests_name(name): return name + AppTests
-def objc_tests_name(name): return name + Objc + Tests
-def objc_app_tests_name(name): return name + Objc + AppTests
+def objc_tests_name(name): return name + objc.capitalize() + Tests
+def objc_app_tests_name(name): return name + objc.capitalize() + AppTests
 def app_name(name): return name + "Bundle"
 
 
@@ -109,7 +109,7 @@ def _first_party_library(
         objc_test_interface(
             name = test_name,
             deps = test_deps,
-            srcs = get_files(package_name = name, path = Tests, language = Objc, extension = m),
+            srcs = get_files(package_name = name, path = Tests, language = objc, extension = m),
         )
 
     # The app test targets can be swift, objc or both
@@ -132,7 +132,7 @@ def _first_party_library(
         objc_test_interface(
             name = test_name,
             deps = app_test_deps,
-            srcs = get_files(package_name = name, path = AppTests, language = Objc, extension = m),
+            srcs = get_files(package_name = name, path = AppTests, language = objc, extension = m),
             host_app = host_app,
         )
 
