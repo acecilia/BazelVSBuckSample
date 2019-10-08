@@ -30,42 +30,29 @@ load(
     "//config:functions.bzl", 
     "get_basename_without_extension",
     "get_basename",
+    "contains_files",
+    "get_files",
     )
 
 # Constants
-sources_path = "Sources"
-tests_path = "Tests"
-app_tests_path = "AppTests"
-resources_path = "Resources"
+Sources = "Sources"
+Tests = "Tests"
+AppTests = "AppTests"
+Resources = "Resources"
 
-any_file_suffix = "/**/*"
-
-# Swift source files
-swift_files_suffix = "/**/*.swift"
-def swift_srcs(): return native.glob([sources_path + swift_files_suffix])
-def swift_test_srcs(): return native.glob([tests_path + swift_files_suffix])
-def swift_app_test_srcs(): return native.glob([app_tests_path + swift_files_suffix])
-
-# Objective-c source files
-objc_files_suffix = "/**/*.m"
-def objc_srcs(): return native.glob([sources_path + objc_files_suffix])
-def objc_test_srcs(): return native.glob([tests_path + objc_files_suffix])
-def objc_app_test_srcs(): return native.glob([app_tests_path + objc_files_suffix])
-
-# Objective-c headers files
-objc_headers_suffix = "/**/*.h"
-def objc_headers(): return native.glob([sources_path + objc_headers_suffix])
-
-# Resources
-def resource_files(): return native.glob([resources_path + any_file_suffix])
+swift = "swift"
+m = "m"
+h = "h"
+Objc = "Objc"
 
 # Target names
-def resources_name(name): return name + resources_path
-def swift_tests_name(name): return name + tests_path
-def swift_app_tests_name(name): return name + app_tests_path
-def objc_tests_name(name): return name + "Objc" + tests_path
-def objc_app_tests_name(name): return name + "Objc" + app_tests_path
+def resources_name(name): return name + Resources
+def swift_tests_name(name): return name + Tests
+def swift_app_tests_name(name): return name + AppTests
+def objc_tests_name(name): return name + Objc + Tests
+def objc_app_tests_name(name): return name + Objc + AppTests
 def app_name(name): return name + "Bundle"
+
 
 # Macros
 def first_party_library(
@@ -106,74 +93,83 @@ def _first_party_library(
 
     # The test targets can be swift, objc or both
     test_deps = [":" + name] + test_deps
-    if len(swift_test_srcs()) > 0:
+
+    if contains_files(Tests, swift):
         test_name = swift_tests_name(name)
         tests = tests + [":" + test_name]
         swift_test_interface(
             name = test_name,
             deps = test_deps,
-            srcs = swift_test_srcs(),
+            srcs = get_files(package_name = name, path = Tests, language = swift, extension = swift),
         )
 
-    if len(objc_test_srcs()) > 0:
+    if contains_files(Tests, m):
         test_name = objc_tests_name(name)
         tests = tests + [":" + test_name]
         objc_test_interface(
             name = test_name,
             deps = test_deps,
-            srcs = objc_test_srcs(),
+            srcs = get_files(package_name = name, path = Tests, language = Objc, extension = m),
         )
 
     # The app test targets can be swift, objc or both
     app_test_deps = [":" + name] + app_test_deps
-    if len(swift_app_test_srcs()) > 0:
+    host_app = _create_host_app_if_needed(name, deps, host_app)
+
+    if contains_files(AppTests, swift):
         test_name = swift_app_tests_name(name)
         tests = tests + [":" + test_name]
         swift_test_interface(
             name = test_name,
             deps = app_test_deps,
-            srcs = swift_app_test_srcs(),
-            host_app = _create_host_app_if_needed(name, deps, host_app),
+            srcs = get_files(package_name = name, path = AppTests, language = swift, extension = swift),
+            host_app = host_app,
         )
 
-    if len(objc_app_test_srcs()) > 0:
+    if contains_files(AppTests, m):
         test_name = objc_app_tests_name(name)
         tests = tests + [":" + test_name]
         objc_test_interface(
             name = test_name,
             deps = app_test_deps,
-            srcs = objc_app_test_srcs(),
-            host_app = _create_host_app_if_needed(name, deps, host_app),
+            srcs = get_files(package_name = name, path = AppTests, language = Objc, extension = m),
+            host_app = host_app,
         )
-
-    resources_rule = None
-    if len(resource_files()) > 0:
-        resources_group_interface(
-            name = resources_name(name),
-            files = resource_files(),
-        )
-        resources_rule = resources_name(name)
 
     # The main target has to be swift or objc, not both
-    if len(swift_srcs()) > 0:
+    resources_rule = _create_resource_rule_if_needed(resources_name(name), get_files(name, Resources))
+    if contains_files(Sources, swift):
         swift_library_interface(
             name = name,
             tests = tests,
-            srcs = swift_srcs(),
+            srcs = get_files(package_name = name, path = Sources, extension = swift),
             deps = deps,
             swift_compiler_flags = swift_compiler_flags + swift_library_compiler_flags(),
             resources_rule = resources_rule,
         )
 
-    if len(objc_srcs()) > 0:
+    if contains_files(Sources, m):
         objc_library_interface(
             name = name,
             tests = tests,
-            srcs = objc_srcs(),
-            headers = objc_headers(),
+            srcs = get_files(package_name = name, path = Sources, extension = m, allowed_extensions = [h]),
+            headers = get_files(package_name = name, path = Sources, extension = h, allowed_extensions = [m]),
             deps = deps,
             resources_rule = resources_rule,
         )
+
+def _create_resource_rule_if_needed(
+    name,
+    resources,
+    ):
+    resources_rule = None
+    if len(resources) > 0:
+        resources_group_interface(
+            name = name,
+            files = resources,
+        )
+        resources_rule = name
+    return resources_rule
 
 def _create_host_app_if_needed(
     name,
