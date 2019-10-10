@@ -51,7 +51,7 @@ def swift_tests_name(name): return name + Tests
 def swift_app_tests_name(name): return name + AppTests
 def objc_tests_name(name): return name + objc.capitalize() + Tests
 def objc_app_tests_name(name): return name + objc.capitalize() + AppTests
-def app_name(name): return name + "Bundle"
+def app_name(name): return name + "Application"
 
 
 # Macros

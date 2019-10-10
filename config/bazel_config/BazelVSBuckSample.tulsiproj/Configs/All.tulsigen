@@ -1,11 +1,18 @@
 {
-  "additionalFilePaths" : [
-    "Libraries/SwiftApp/BUILD"
-  ],
   "buildTargets" : [
-    "//Libraries/SwiftApp:SwiftApp",
+    "//Libraries/SwiftModuleWithPrebuiltDependency:SwiftModuleWithPrebuiltDependencyTests",
+    "//Libraries/SwiftModule:SwiftModuleTests",
+    "//Libraries/SwiftModule:SwiftModuleAppTests",
+    "//Libraries/SwiftApp:SwiftAppTests",
     "//Libraries/SwiftApp:SwiftAppAppTests",
-    "//Libraries/SwiftApp:SwiftAppTests"
+    "//Libraries/SwiftApp:SwiftAppApplication",
+    "//Libraries/SwiftApp:SwiftApp",
+    "//Libraries/SwiftModuleWithoutTests:SwiftModuleWithoutTests",
+    "//Libraries/SwiftModuleWithPrebuiltDependency:SwiftModuleWithPrebuiltDependency",
+    "//Libraries/SwiftModule:SwiftModule",
+    "//Libraries/ObjcModule:ObjcModuleTests",
+    "//Libraries/ObjcModule:ObjcModuleObjcTests",
+    "//Libraries/ObjcModule:ObjcModule",
   ],
   "optionSet" : {
     "BazelBuildOptionsDebug" : {
@@ -50,16 +57,6 @@
   },
   "projectName" : "BazelVSBuckSample",
   "sourceFilters" : [
-    "Libraries",
-    "Libraries/SwiftApp",
-    "Libraries/SwiftApp/AppTests",
-    "Libraries/SwiftApp/Sources",
-    "Libraries/SwiftApp/Tests",
-    "Libraries/SwiftModule",
-    "Libraries/SwiftModule/Sources",
-    "Libraries/SwiftModuleWithPrebuiltDependency",
-    "Libraries/SwiftModuleWithPrebuiltDependency/Sources",
-    "Libraries/SwiftModuleWithoutTests",
-    "Libraries/SwiftModuleWithoutTests/Sources"
+    "Libraries/..."
   ]
 }

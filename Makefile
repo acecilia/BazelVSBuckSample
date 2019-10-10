@@ -32,9 +32,9 @@ test: setup_config
 run: setup_config
 # Run the app in the simulator
 ifeq ($(BUILDTOOL),buck)
-	$(BUILDTOOL) install --run --simulator-name "iPhone 8" //Libraries/SwiftApp:SwiftAppBundle
+	$(BUILDTOOL) install --run --simulator-name "iPhone 8" //Libraries/SwiftApp:SwiftAppApplication
 else
-	$(BUILDTOOL) run //Libraries/SwiftApp:SwiftAppBundle
+	$(BUILDTOOL) run --ios_simulator_device="iPhone 8" --ios_simulator_version="13.0" //Libraries/SwiftApp:SwiftAppApplication
 endif
 
 install_tulsi:
@@ -50,7 +50,7 @@ ifeq ($(BUILDTOOL),buck)
 	# Rename shared schemes of the workspaces to All, as what they do is build and test all targets
 	find . -path '*.xcworkspace/xcshareddata/xcschemes/*.xcscheme' -execdir mv {} All.xcscheme \;
 else
-	/Applications/Tulsi.app/Contents/MacOS/Tulsi -- --bazel /usr/local/bin/bazel --genconfig "config/bazel_config/BazelVSBuckSample.tulsiproj:All"
+	sh scripts/generate_xcode_project_tulsi.sh
 endif
 
 project_xchammer:
@@ -70,12 +70,8 @@ extract_ipa: setup_config
 	rm -rf "$(ipa_output_path)/$(BUILDTOOL)"
 
 list: setup_config
-# List all targets
-ifeq ($(BUILDTOOL),buck)
-	$(BUILDTOOL) targets //Libraries/...
-else
-	$(BUILDTOOL) query //Libraries/...
-endif
+# List main targets, filtering out other secondary ones
+	$(BUILDTOOL) query 'filter("^.+\/(.*):\1(.*(Tests|AppTests|Application))?$$", //Libraries/...)'	
 
 clean: setup_config
 	find . \( -name '*.xcworkspace' -o -name '*.xcodeproj' \) -exec rm -rf {} +
