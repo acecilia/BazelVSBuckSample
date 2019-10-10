@@ -1,18 +1,18 @@
 {
   "buildTargets" : [
-    "//Libraries/SwiftModuleWithPrebuiltDependency:SwiftModuleWithPrebuiltDependencyTests",
-    "//Libraries/SwiftModule:SwiftModuleTests",
-    "//Libraries/SwiftModule:SwiftModuleAppTests",
-    "//Libraries/SwiftApp:SwiftAppTests",
+    "//Libraries/ObjcModule:ObjcModule",
+    "//Libraries/ObjcModule:ObjcModuleObjcTests",
+    "//Libraries/ObjcModule:ObjcModuleTests",
+    "//Libraries/SwiftApp:SwiftApp",
     "//Libraries/SwiftApp:SwiftAppAppTests",
     "//Libraries/SwiftApp:SwiftAppApplication",
-    "//Libraries/SwiftApp:SwiftApp",
-    "//Libraries/SwiftModuleWithoutTests:SwiftModuleWithoutTests",
-    "//Libraries/SwiftModuleWithPrebuiltDependency:SwiftModuleWithPrebuiltDependency",
+    "//Libraries/SwiftApp:SwiftAppTests",
     "//Libraries/SwiftModule:SwiftModule",
-    "//Libraries/ObjcModule:ObjcModuleTests",
-    "//Libraries/ObjcModule:ObjcModuleObjcTests",
-    "//Libraries/ObjcModule:ObjcModule",
+    "//Libraries/SwiftModule:SwiftModuleAppTests",
+    "//Libraries/SwiftModule:SwiftModuleTests",
+    "//Libraries/SwiftModuleWithPrebuiltDependency:SwiftModuleWithPrebuiltDependency",
+    "//Libraries/SwiftModuleWithPrebuiltDependency:SwiftModuleWithPrebuiltDependencyTests",
+    "//Libraries/SwiftModuleWithoutTests:SwiftModuleWithoutTests"
   ],
   "optionSet" : {
     "BazelBuildOptionsDebug" : {
@@ -57,6 +57,6 @@
   },
   "projectName" : "BazelVSBuckSample",
   "sourceFilters" : [
-    "Libraries/..."
+    "//Libraries/..."
   ]
 }

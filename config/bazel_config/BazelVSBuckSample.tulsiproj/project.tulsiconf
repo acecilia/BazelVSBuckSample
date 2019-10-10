@@ -1,3 +1,9 @@
 {
+  "configDefaults" : {
+    "optionSet" : {
+
+    }
+  },
+  "projectName" : "BazelVSBuckSample",
   "workspaceRoot" : "../../.."
 }
