@@ -52,6 +52,7 @@ def _apple_library_interface(
     headers,
     deps,
     swift_compiler_flags,
+    swift_version,
     resources_rule,
     ):
     # In buck, resources are used as dependencies. See: https://buck.build/rule/apple_resource.html
@@ -65,7 +66,7 @@ def _apple_library_interface(
         exported_headers = headers,
         modular = True,
         deps = deps,
-        swift_version = SWIFT_VERSION,
+        swift_version = swift_version,
         visibility = ["PUBLIC"],
         configs = xcode_library_configs(name),
         swift_compiler_flags = swift_compiler_flags,
@@ -77,7 +78,7 @@ def objc_library_interface(
     srcs,
     headers,
     deps,
-    resources_rule = None,
+    resources_rule,
     ):
     _apple_library_interface(
         name = name,
@@ -86,6 +87,7 @@ def objc_library_interface(
         headers = headers,
         deps = deps,
         swift_compiler_flags = None,
+        swift_version = None,
         resources_rule = resources_rule,
     )
 
@@ -95,7 +97,8 @@ def swift_library_interface(
     srcs,
     deps,
     swift_compiler_flags,
-    resources_rule = None,
+    swift_version,
+    resources_rule,
     ):
     _apple_library_interface(
         name = name,
@@ -104,6 +107,7 @@ def swift_library_interface(
         headers = None,
         deps = deps,
         swift_compiler_flags = swift_compiler_flags,
+        swift_version = swift_version,
         resources_rule = resources_rule,
     )
 
@@ -112,6 +116,7 @@ def _apple_test_interface(
     srcs,
     deps,
     swift_compiler_flags,
+    swift_version,
     host_app,
     ):
     deps = deps + prebuilt_dependencies_hack
@@ -127,7 +132,7 @@ def _apple_test_interface(
         info_plist = '//Support/Files:Info.plist',
         info_plist_substitutions = plist_substitutions(name),
         test_host_app = host_app,
-        swift_version = SWIFT_VERSION,
+        swift_version = swift_version,
         swift_compiler_flags = swift_compiler_flags,
         configs = xcode_library_configs(name),
     )
@@ -136,13 +141,14 @@ def objc_test_interface(
     name,
     srcs,
     deps,
-    host_app = None,
+    host_app,
     ):
     _apple_test_interface(
         name = name,
         srcs = srcs,
         deps = deps,
         swift_compiler_flags = None,
+        swift_version = None,
         host_app = host_app,
     )
 
@@ -150,13 +156,15 @@ def swift_test_interface(
     name,
     srcs,
     deps,
-    host_app = None,
+    swift_version,
+    host_app,
     ):
     _apple_test_interface(
         name = name,
         srcs = srcs,
         deps = deps,
         swift_compiler_flags = SWIFT_DEBUG_COMPILER_FLAGS,
+        swift_version = swift_version,
         host_app = host_app,
     )
 
@@ -175,7 +183,7 @@ def application_interface(
     name,
     infoplist,
     main_target,
-    strip_unused_symbols = True,
+    strip_unused_symbols,
     ):
     linker_flags = None
     if strip_unused_symbols == False:
@@ -189,7 +197,7 @@ def application_interface(
         srcs = ["//Support/Files:Dummy.swift"],
         deps = [main_target],
         linker_flags = linker_flags,
-        swift_version = SWIFT_VERSION,
+        swift_version = SWIFT_VERSION, # Any swift version will work here, as the dummy file is empty
         configs = xcode_app_configs(name),
     )
 

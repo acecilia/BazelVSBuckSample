@@ -27,6 +27,7 @@ Carthage/Build
 
 products/
 Libraries/SAM/
+Libraries/Legacy/
 *.xcodeproj
 *.tulsiconf-user
 tools/xchammer

@@ -15,4 +15,6 @@ SWIFT_DEBUG_COMPILER_FLAGS = [
     "-Onone",   
     # Print debug information
     "-g",
+    # Make libraries testable
+    "-enable-testing",
 ] + SWIFT_COMPILER_FLAGS

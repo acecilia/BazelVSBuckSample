@@ -23,6 +23,7 @@ load(
 
 load(
     "//config:constants.bzl", 
+    "SWIFT_VERSION",
     "SWIFT_DEBUG_COMPILER_FLAGS",
     )
 
@@ -59,6 +60,7 @@ def first_party_library(
     deps = [],
     test_deps = [],
     app_test_deps = [],
+    swift_version = SWIFT_VERSION,
     host_app = None,
     ):
     # Infer name from the path of the package
@@ -73,17 +75,19 @@ def first_party_library(
         deps = deps,
         test_deps = test_deps,
         app_test_deps = app_test_deps,
-        swift_compiler_flags = [],
+        swift_compiler_flags = swift_compiler_flags,
+        swift_version = swift_version,
         host_app = host_app,
     )
 
 def _first_party_library(
+    name,
     deps,
     test_deps,
     app_test_deps,
     swift_compiler_flags,
+    swift_version,
     host_app,
-    name = None,
     ):
     # Infer name from the path of the package
     name = name or get_basename(native.package_name())
@@ -101,6 +105,8 @@ def _first_party_library(
             name = test_name,
             deps = test_deps,
             srcs = get_files(package_name = name, path = Tests, language = swift, extension = swift),
+            swift_version = swift_version,
+            host_app = None,
         )
 
     if contains_files(Tests, m):
@@ -110,6 +116,7 @@ def _first_party_library(
             name = test_name,
             deps = test_deps,
             srcs = get_files(package_name = name, path = Tests, language = objc, extension = m),
+            host_app = None,
         )
 
     # The app test targets can be swift, objc or both
@@ -123,6 +130,7 @@ def _first_party_library(
             name = test_name,
             deps = app_test_deps,
             srcs = get_files(package_name = name, path = AppTests, language = swift, extension = swift),
+            swift_version = swift_version,
             host_app = host_app,
         )
 
@@ -145,6 +153,7 @@ def _first_party_library(
             srcs = get_files(package_name = name, path = Sources, extension = swift),
             deps = deps,
             swift_compiler_flags = swift_compiler_flags + swift_library_compiler_flags(),
+            swift_version = swift_version,
             resources_rule = resources_rule,
         )
 
@@ -186,6 +195,8 @@ def _create_host_app_if_needed(
             srcs = ["//Support/Files:AppDelegate.swift"],
             deps = [":" + name] + deps,
             swift_compiler_flags = SWIFT_DEBUG_COMPILER_FLAGS,
+            swift_version = SWIFT_VERSION,
+            resources_rule = None,
         )
 
         # - strip_unused_symbols: when testing a library inside an app, by default the unused symbols are
@@ -206,6 +217,7 @@ def application(
     deps = [],
     test_deps = [],
     app_test_deps = [],
+    swift_version = SWIFT_VERSION,
     ):
     # Infer name from the path of the package
     name = get_basename(native.package_name())
@@ -216,7 +228,8 @@ def application(
         deps = deps,
         test_deps = test_deps,
         app_test_deps = app_test_deps,
-        swift_compiler_flags = ["-enable-testing"],
+        swift_compiler_flags = [],
+        swift_version = swift_version,
         host_app = ":" + app_name(name),
     )
 
@@ -225,6 +238,7 @@ def application(
         name = app_name(name),
         infoplist = infoplist,
         main_target = ":" + name,
+        strip_unused_symbols = True,
     )
 
 def prebuilt_dynamic_framework(
