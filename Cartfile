@@ -1,2 +1,7 @@
 github "nvzqz/FileKit"
 github "CocoaLumberjack/CocoaLumberjack"
+github "realm/realm-cocoa"
+github "evgenyneu/keychain-swift"
+github "ashleymills/Reachability.swift"
+github "tadija/AEXML"
+github "krzyzanowskim/CryptoSwift"

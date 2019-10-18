@@ -11,6 +11,10 @@ build_system = "buck"
 prebuilt_dependencies_hack = [
     "//Carthage:CocoaLumberjack",
     "//Carthage:FileKit",
+    "//Carthage:Realm",
+    "//Carthage:RealmSwift",
+    "//Carthage:KeychainSwift",
+    "//Carthage:Reachability",
 ]
 
 def exports_files_interface(

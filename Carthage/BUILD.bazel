@@ -7,3 +7,27 @@ prebuilt_dynamic_framework(
 prebuilt_dynamic_framework(
     path = "Build/iOS/FileKit.framework",
 )
+
+prebuilt_dynamic_framework(
+    path = "Build/iOS/RealmSwift.framework",
+)
+
+prebuilt_dynamic_framework(
+    path = "Build/iOS/Realm.framework",
+)
+
+prebuilt_dynamic_framework(
+    path = "Build/iOS/KeychainSwift.framework",
+)
+
+prebuilt_dynamic_framework(
+    path = "Build/iOS/Reachability.framework",
+)
+
+prebuilt_dynamic_framework(
+    path = "Build/iOS/AEXML.framework",
+)
+
+prebuilt_dynamic_framework(
+    path = "Build/iOS/CryptoSwift.framework",
+)
