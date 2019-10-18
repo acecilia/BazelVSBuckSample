@@ -2,7 +2,7 @@ load("@rules_cc//cc:defs.bzl", "objc_library")
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test", "ios_application")
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_dynamic_framework_import")
-load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle")
+load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle", "apple_resource_group")
 load("//config:constants.bzl", "MINIMUM_OS_VERSION", "PRODUCT_BUNDLE_IDENTIFIER_PREFIX", "SWIFT_DEBUG_COMPILER_FLAGS")
 load("//config:functions.bzl", "get_basename")
 
@@ -19,17 +19,18 @@ def exports_files_interface(
 def resources_group_interface(
     name,
     files,
+    bundled,
     ):
-    apple_resource_bundle(
-        name = name,
-        resources = files,
-    )
-
-def get_data_from(resources_rule): 
-    if resources_rule != None:
-        return [":" + resources_rule]
+    if bundled:
+        apple_resource_bundle(
+            name = name,
+            resources = files,
+        )
     else:
-        return []
+        apple_resource_group(
+            name = name,
+            resources = files,
+        )
 
 def objc_library_interface(
     name,
@@ -37,7 +38,7 @@ def objc_library_interface(
     srcs,
     headers,
     deps,
-    resources_rule,
+    resources,
     ):
     exported_headers = []
     if len(headers) > 0:
@@ -65,7 +66,7 @@ def objc_library_interface(
         # Also, we still need the initial headers list here, so the `.m` files can import their headers correctly
         hdrs = headers + exported_headers,
         deps = deps,
-        data = get_data_from(resources_rule),
+        data = resources,
         module_name = name,
         # Include the directory where the headers are. This will also be passed to rules depending on this one
         # See: https://docs.bazel.build/versions/master/be/objective-c.html#objc_library.includes
@@ -80,13 +81,13 @@ def swift_library_interface(
     deps,
     swift_compiler_flags,
     swift_version,
-    resources_rule,
+    resources,
     ):
     swift_library(
         name = name,
         srcs = srcs,
         deps = deps,
-        data = get_data_from(resources_rule),
+        data = resources,
         module_name = name,
         copts = swift_compiler_flags + ["-swift-version", swift_version],
         visibility = ["//visibility:public"],
@@ -109,6 +110,7 @@ def objc_test_interface(
         srcs = srcs,
         deps = deps,
         module_name = test_lib_name,
+        enable_modules = True,
     )
 
     ios_unit_test(

@@ -29,20 +29,27 @@ def exports_files_interface(
 def resources_group_interface(
     name,
     files,
+    bundled,
     ):
-    # Buck does not support generating a resources bundle: using a genrule is a workaround
-    # See: https://github.com/facebook/buck/issues/1483
-    genrule_name = name + "GenRule"
-    native.genrule(
-        name = genrule_name,
-        srcs = files,
-        out = name + ".bundle",
-        cmd = "mkdir $OUT && cp $SRCS $OUT",
-    )
-    native.apple_resource(
-        name = name,
-        dirs = [":" + genrule_name],
-    )
+    if bundled:
+        # Buck does not support generating a resources bundle: using a genrule is a workaround
+        # See: https://github.com/facebook/buck/issues/1483
+        genrule_name = name + "GenRule"
+        native.genrule(
+            name = genrule_name,
+            srcs = files,
+            out = name + ".bundle",
+            cmd = "mkdir $OUT && cp $SRCS $OUT",
+        )
+        native.apple_resource(
+            name = name,
+            dirs = [":" + genrule_name],
+        )
+    else:
+        native.apple_resource(
+            name = name,
+            files = files,
+        )
 
 # A common interface for a swift or objc library
 def _apple_library_interface(
@@ -53,11 +60,10 @@ def _apple_library_interface(
     deps,
     swift_compiler_flags,
     swift_version,
-    resources_rule,
+    resources,
     ):
     # In buck, resources are used as dependencies. See: https://buck.build/rule/apple_resource.html
-    if resources_rule != None:
-        deps = deps + [":" + resources_rule]
+    deps = deps + resources
 
     native.apple_library(
         name = name,
@@ -78,7 +84,7 @@ def objc_library_interface(
     srcs,
     headers,
     deps,
-    resources_rule,
+    resources,
     ):
     _apple_library_interface(
         name = name,
@@ -88,7 +94,7 @@ def objc_library_interface(
         deps = deps,
         swift_compiler_flags = None,
         swift_version = None,
-        resources_rule = resources_rule,
+        resources = resources,
     )
 
 def swift_library_interface(
@@ -98,7 +104,7 @@ def swift_library_interface(
     deps,
     swift_compiler_flags,
     swift_version,
-    resources_rule,
+    resources,
     ):
     _apple_library_interface(
         name = name,
@@ -108,7 +114,7 @@ def swift_library_interface(
         deps = deps,
         swift_compiler_flags = swift_compiler_flags,
         swift_version = swift_version,
-        resources_rule = resources_rule,
+        resources = resources,
     )
 
 def _apple_test_interface(

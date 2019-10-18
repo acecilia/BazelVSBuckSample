@@ -39,7 +39,6 @@ load(
 Sources = "Sources"
 Tests = "Tests"
 AppTests = "AppTests"
-Resources = "Resources"
 
 swift = "swift"
 m = "m"
@@ -47,13 +46,16 @@ h = "h"
 objc = "objc"
 
 # Target names
-def resources_name(name): return name + Resources
 def swift_tests_name(name): return name + Tests
 def swift_app_tests_name(name): return name + AppTests
 def objc_tests_name(name): return name + objc.capitalize() + Tests
 def objc_app_tests_name(name): return name + objc.capitalize() + AppTests
 def app_name(name): return name + "Application"
 
+# Resource constants
+Unbundled = "Unbundled"
+Resources = "Resources"
+TestResources = "TestResources"
 
 # Macros
 def first_party_library(
@@ -97,7 +99,6 @@ def _first_party_library(
 
     # The test targets can be swift, objc or both
     test_deps = [":" + name] + test_deps
-
     if contains_files(Tests, swift):
         test_name = swift_tests_name(name)
         tests = tests + [":" + test_name]
@@ -121,7 +122,8 @@ def _first_party_library(
 
     # The app test targets can be swift, objc or both
     app_test_deps = [":" + name] + app_test_deps
-    host_app = _create_host_app_if_needed(name, deps, host_app)
+    test_resources = _resources(name = name, are_test_resources = True)
+    host_app = _create_host_app_if_needed(name, deps, test_resources, host_app)
 
     if contains_files(AppTests, swift):
         test_name = swift_app_tests_name(name)
@@ -145,7 +147,7 @@ def _first_party_library(
         )
 
     # The main target has to be swift or objc, not both
-    resources_rule = _create_resource_rule_if_needed(resources_name(name), get_files(name, Resources))
+    resources = _resources(name = name, are_test_resources = False)
     if contains_files(Sources, swift):
         swift_library_interface(
             name = name,
@@ -154,7 +156,7 @@ def _first_party_library(
             deps = deps,
             swift_compiler_flags = swift_compiler_flags + swift_library_compiler_flags(),
             swift_version = swift_version,
-            resources_rule = resources_rule,
+            resources = resources,
         )
 
     if contains_files(Sources, m):
@@ -164,25 +166,35 @@ def _first_party_library(
             srcs = get_files(package_name = name, path = Sources, extension = m, allowed_extensions = [h]),
             headers = get_files(package_name = name, path = Sources, extension = h, allowed_extensions = [m]),
             deps = deps,
-            resources_rule = resources_rule,
+            resources = resources,
         )
 
-def _create_resource_rule_if_needed(
+def _resources(
     name,
-    resources,
+    are_test_resources,
     ):
-    resources_rule = None
-    if len(resources) > 0:
-        resources_group_interface(
-            name = name,
-            files = resources,
-        )
-        resources_rule = name
-    return resources_rule
+    resources_rules = []
+    base_path = TestResources if are_test_resources else Resources
+
+    for bundled in [False, True]:
+        path = base_path if bundled else (Unbundled + base_path)
+
+        resources = get_files(name, path)
+        if len(resources) > 0:
+            resources_rule_name = name + path
+            resources_group_interface(
+                name = resources_rule_name,
+                files = resources,
+                bundled = bundled,
+            )
+            resources_rules = resources_rules + [":" + resources_rule_name]
+
+    return resources_rules
 
 def _create_host_app_if_needed(
     name,
     deps,
+    resources,
     host_app,
     ):
     if host_app == None:
@@ -196,7 +208,7 @@ def _create_host_app_if_needed(
             deps = [":" + name] + deps,
             swift_compiler_flags = SWIFT_DEBUG_COMPILER_FLAGS,
             swift_version = SWIFT_VERSION,
-            resources_rule = None,
+            resources = resources,
         )
 
         # - strip_unused_symbols: when testing a library inside an app, by default the unused symbols are
