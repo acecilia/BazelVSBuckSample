@@ -40,6 +40,7 @@ def objc_library_interface(
     deps,
     resources,
     ):
+    basenamed_headers = []
     exported_headers = []
     if len(headers) > 0:
         # Bazel does not support objc_library that depend on other objc_library
@@ -57,20 +58,35 @@ def objc_library_interface(
         )
         exported_headers = [":" + exported_headers_rule_name]
 
+        # Bazel requires headers to be specified relative to the workspace
+        # In order to work around that, it is possible to use a genrule to place all
+        # headers under the same directory
+        # See: https://docs.bazel.build/versions/master/be/objective-c.html#objc_library.includes
+        basenamed_headers_rule_name = name + "BasenamedHeaders"
+        basenamed_headers_path = "basenamed"
+        native.genrule(
+            name = basenamed_headers_rule_name,
+            srcs = headers,
+            outs = [basenamed_headers_path + "/" + get_basename(x) for x in headers],
+            cmd  = "cp $(SRCS) $(RULEDIR)" + "/" + basenamed_headers_path,
+        )
+        basenamed_headers = [":" + basenamed_headers_rule_name]
+
     objc_library(
         name = name,
         srcs = srcs,
         # In order to make sure that the headers under the `exported_headers_path` directory are inside the sandbox 
-        # we have to make the `exported_headers_rule_name` a dependency of the `objc_library`: 
+        # we have to make the `basenamed_headers` and `exported_headers` a dependency of the `objc_library`: 
         # we can do that by setting it as the value for the `hdrs` argument
-        # Also, we still need the initial headers list here, so the `.m` files can import their headers correctly
-        hdrs = headers + exported_headers,
+        # We also need the normal headers, so they appear when generating the xcode project
+        hdrs = basenamed_headers + exported_headers + headers,
         deps = deps,
         data = resources,
         module_name = name,
         # Include the directory where the headers are. This will also be passed to rules depending on this one
         # See: https://docs.bazel.build/versions/master/be/objective-c.html#objc_library.includes
-        includes = [exported_headers_path],
+        includes = [exported_headers_path, basenamed_headers_path],
+        enable_modules = True,
         visibility = ["//visibility:public"],
     )
 
